@@ -1086,9 +1086,14 @@ function renderTable(rows, totalOpen, totalJoin, totalExits, totalVol, totalCo, 
 
   rows.forEach(r => {
     const chg = r.closing - r.opening;
-    const attPillClass = r.att === 0 ? 'pill-zero' : r.att >= 30 ? 'pill-red' : r.att >= 10 ? 'pill-amber' : 'pill-green';
+    // Consultant & Offroll rows use exits / opening (Mar-26) for attrition
+    const useOpeningFormula = r.type === 'Consultant' || r.type === 'Offroll';
+    const att = useOpeningFormula
+      ? (r.opening > 0 ? (r.exits / r.opening * 100) : 0)
+      : r.att;
+    const attPillClass = att === 0 ? 'pill-zero' : att >= 30 ? 'pill-red' : att >= 10 ? 'pill-amber' : 'pill-green';
     const chgClass = chg > 0 ? 'chg-pos' : chg < 0 ? 'chg-neg' : 'chg-zero';
-    const attText = r.att > 0 ? r.att.toFixed(2) + '%' : '—';
+    const attText = att > 0 ? att.toFixed(2) + '%' : '—';
     html += `<tr>
       <td><span class="badge ${typeClass[r.type]||'b-offroll'}">${r.type}</span></td>
       <td><span class="tag-loc">${r.loc}</span></td>
