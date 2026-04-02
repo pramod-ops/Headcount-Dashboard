@@ -134,6 +134,25 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #eef1f6; colo
 .btn-new-upload:hover { background: rgba(255,255,255,0.25); }
 .btn-save-html { background: rgba(34,197,94,0.25); border: 1px solid rgba(34,197,94,0.5); color: #86efac; border-radius: 8px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background .2s; }
 .btn-save-html:hover { background: rgba(34,197,94,0.4); }
+.btn-share-link { background: rgba(139,92,246,0.3); border: 1px solid rgba(139,92,246,0.6); color: #c4b5fd; border-radius: 8px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background .2s; }
+.btn-share-link:hover { background: rgba(139,92,246,0.5); }
+.btn-share-link:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Share Modal */
+#shareModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; }
+#shareModal.open { display:flex; }
+.share-box { background:#fff; border-radius:16px; padding:32px; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.share-box h3 { font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:6px; }
+.share-box p { font-size:0.8rem; color:#64748b; margin-bottom:18px; }
+.share-url-row { display:flex; gap:8px; align-items:center; }
+.share-url-input { flex:1; border:1.5px solid #e2e8f0; border-radius:8px; padding:9px 12px; font-size:0.78rem; color:#1e293b; background:#f8fafc; outline:none; }
+.share-copy-btn { background:#6366f1; color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:0.78rem; font-weight:700; cursor:pointer; white-space:nowrap; }
+.share-copy-btn:hover { background:#4f46e5; }
+.share-note { font-size:0.72rem; color:#94a3b8; margin-top:10px; }
+.share-close { margin-top:18px; width:100%; background:#f1f5f9; border:none; border-radius:8px; padding:9px; font-size:0.82rem; font-weight:600; cursor:pointer; color:#475569; }
+.share-close:hover { background:#e2e8f0; }
+.share-spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; vertical-align:middle; margin-right:5px; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
 .container { max-width: 1440px; margin: 0 auto; padding: 24px 28px 56px; }
 
@@ -266,6 +285,7 @@ tr.total-row td { color:#f1f5f9; font-weight:700; border:none; }
       <div class="header-sub" id="hSub">All Locations · All Employee Types</div>
     </div>
     <div class="header-right">
+      <button class="btn-share-link" id="btnShareLink" onclick="shareAsLink()">🔗 Get Share Link</button>
       <button class="btn-save-html" onclick="saveAsHTML()">💾 Save as HTML</button>
       <button class="btn-new-upload" onclick="resetToUpload()">⬆ Upload New File</button>
       <div class="header-badge" id="hBadge">📅 Snapshot</div>
@@ -350,6 +370,20 @@ tr.total-row td { color:#f1f5f9; font-weight:700; border:none; }
     </div>
   </div>
   <div class="footer" id="footerText">Headcount Dashboard</div>
+</div>
+
+<!-- Share Modal -->
+<div id="shareModal">
+  <div class="share-box">
+    <h3>🔗 Share Dashboard Link</h3>
+    <p>Anyone with this link can view the dashboard — no login required.</p>
+    <div class="share-url-row">
+      <input class="share-url-input" id="shareUrlInput" readonly>
+      <button class="share-copy-btn" onclick="copyShareUrl()">Copy</button>
+    </div>
+    <div class="share-note" id="shareNote">Link is live on GitHub Pages — may take ~1 min to activate.</div>
+    <button class="share-close" onclick="document.getElementById('shareModal').classList.remove('open')">Close</button>
+  </div>
 </div>
 
 <script>
@@ -737,49 +771,111 @@ function resetToUpload() {
   parsedRows = [];
 }
 
-function saveAsHTML() {
-  // Clone the dashboard node
-  const dash = document.getElementById('dashboardScreen').cloneNode(true);
+async function shareAsLink() {
+  // Get or prompt for GitHub PAT
+  let token = localStorage.getItem('gh_share_pat');
+  if (!token) {
+    token = prompt(
+      'Enter your GitHub Personal Access Token (PAT) to share dashboards via a link.\n\n' +
+      'How to create one:\n' +
+      '1. Go to github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)\n' +
+      '2. Generate new token → Select scope: "repo"\n' +
+      '3. Copy and paste here\n\n' +
+      'This is stored locally in your browser only.'
+    );
+    if (!token || !token.trim()) return;
+    localStorage.setItem('gh_share_pat', token.trim());
+  }
+  token = token.trim();
 
-  // Replace every <canvas> with a static <img> using its data URL
-  const canvases = document.getElementById('dashboardScreen').querySelectorAll('canvas');
-  const imgs     = dash.querySelectorAll('canvas');
-  canvases.forEach((cv, i) => {
-    const img = document.createElement('img');
-    img.src   = cv.toDataURL('image/png');
-    img.style.cssText = `width:100%;height:${cv.height}px;display:block;`;
-    imgs[i].replaceWith(img);
+  const btn = document.getElementById('btnShareLink');
+  btn.innerHTML = '<span class="share-spinner"></span>Publishing...';
+  btn.disabled = true;
+
+  try {
+    const html = buildShareableHTML();
+    const title = (document.getElementById('hTitle')?.textContent || 'Dashboard').trim();
+    const date  = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).replace(/ /g,'-');
+    const fname = `${title.replace(/[^a-z0-9]/gi,'_')}_${date}.html`;
+    const path  = `outputs/${fname}`;
+    const owner = 'pramod-ops';
+    const repo  = 'Headcount-Dashboard';
+
+    // Check if file exists (need SHA to update)
+    let sha = null;
+    const chk = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (chk.ok) sha = (await chk.json()).sha;
+
+    // Base64-encode HTML (handles Unicode correctly)
+    const bytes   = new TextEncoder().encode(html);
+    const binStr  = Array.from(bytes, b => String.fromCharCode(b)).join('');
+    const content = btoa(binStr);
+
+    const body = { message: `Share dashboard: ${fname}`, content };
+    if (sha) body.sha = sha;
+
+    const put = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!put.ok) {
+      const err = await put.json();
+      if (err.message?.toLowerCase().includes('bad credential')) localStorage.removeItem('gh_share_pat');
+      throw new Error(err.message || 'GitHub API error');
+    }
+
+    const url = `https://${owner}.github.io/${repo}/${path}`;
+    document.getElementById('shareUrlInput').value = url;
+    document.getElementById('shareModal').classList.add('open');
+
+  } catch (err) {
+    alert('Could not create link:\n' + err.message);
+  } finally {
+    btn.innerHTML = '🔗 Get Share Link';
+    btn.disabled = false;
+  }
+}
+
+function copyShareUrl() {
+  const inp = document.getElementById('shareUrlInput');
+  inp.select();
+  navigator.clipboard.writeText(inp.value).then(() => {
+    const btn = document.querySelector('.share-copy-btn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
   });
+}
 
-  // Remove interactive buttons from the saved copy
-  dash.querySelectorAll('.btn-save-html, .btn-new-upload').forEach(b => b.remove());
-
-  // Extract CSS from the page
+function buildShareableHTML() {
+  const dash = document.getElementById('dashboardScreen').cloneNode(true);
+  const canvases = document.getElementById('dashboardScreen').querySelectorAll('canvas');
+  dash.querySelectorAll('canvas').forEach((c, i) => {
+    const img = document.createElement('img');
+    img.src = canvases[i].toDataURL('image/png');
+    img.style.cssText = `width:100%;height:${canvases[i].height}px;display:block;`;
+    c.replaceWith(img);
+  });
+  dash.querySelectorAll('.btn-save-html,.btn-new-upload,.btn-share-link').forEach(b => b.remove());
   const styles = Array.from(document.styleSheets)
     .map(ss => { try { return Array.from(ss.cssRules).map(r => r.cssText).join('\n'); } catch { return ''; } })
     .join('\n');
-
   const title = document.getElementById('hTitle')?.textContent || 'Headcount Dashboard';
-  const date  = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+  const date  = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  return `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>${title}</title>\n<style>${styles}</style>\n</head>\n<body>\n${dash.outerHTML}\n<div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on ${date}</div>\n</body>\n</html>`;
+}
 
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>${title}</title>
-<style>${styles}</style>
-</head>
-<body>
-${dash.outerHTML}
-<div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on ${date}</div>
-</body>
-</html>`;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = `${title.replace(/[^a-z0-9]/gi,'_')}_${date.replace(/ /g,'-')}.html`;
+function saveAsHTML() {
+  const html  = buildShareableHTML();
+  const title = (document.getElementById('hTitle')?.textContent || 'Headcount Dashboard').trim();
+  const date  = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).replace(/ /g,'-');
+  const blob  = new Blob([html], { type: 'text/html' });
+  const a     = document.createElement('a');
+  a.href      = URL.createObjectURL(blob);
+  a.download  = `${title.replace(/[^a-z0-9]/gi,'_')}_${date}.html`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
