@@ -892,20 +892,60 @@ function copyShareUrl() {
 
 function buildShareableHTML() {
   const dash = document.getElementById('dashboardScreen').cloneNode(true);
-  const canvases = document.getElementById('dashboardScreen').querySelectorAll('canvas');
-  dash.querySelectorAll('canvas').forEach((c, i) => {
-    const img = document.createElement('img');
-    img.src = canvases[i].toDataURL('image/png');
-    img.style.cssText = `width:100%;height:${canvases[i].height}px;display:block;`;
-    c.replaceWith(img);
+
+  // Capture live chart configs before any DOM changes
+  const chartConfigs = {};
+  document.getElementById('dashboardScreen').querySelectorAll('canvas').forEach(cv => {
+    const instance = Chart.getChart(cv);
+    if (instance) {
+      chartConfigs[cv.id] = {
+        type:    instance.config.type,
+        data:    JSON.parse(JSON.stringify(instance.config.data)),
+        options: JSON.parse(JSON.stringify(instance.config.options))
+      };
+    }
   });
+
+  // Keep canvases intact (Chart.js will redraw them in the saved file)
+  dash.querySelectorAll('canvas').forEach(c => {
+    c.removeAttribute('width');
+    c.removeAttribute('height');
+    c.style.cssText = '';
+  });
+
   dash.querySelectorAll('.btn-save-html,.btn-new-upload,.btn-share-link').forEach(b => b.remove());
+
   const styles = Array.from(document.styleSheets)
     .map(ss => { try { return Array.from(ss.cssRules).map(r => r.cssText).join('\n'); } catch { return ''; } })
     .join('\n');
+
   const title = document.getElementById('hTitle')?.textContent || 'Headcount Dashboard';
   const date  = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  return `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>${title}</title>\n<style>${styles}</style>\n</head>\n<body>\n${dash.outerHTML}\n<div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on ${date}</div>\n</body>\n</html>`;
+  const cfgJSON = JSON.stringify(chartConfigs);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${title}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"><\/script>
+<style>${styles}</style>
+</head>
+<body>
+${dash.outerHTML}
+<div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on ${date}</div>
+<script>
+Chart.register(ChartDataLabels);
+const _cfgs = ${cfgJSON};
+Object.entries(_cfgs).forEach(([id, cfg]) => {
+  const el = document.getElementById(id);
+  if (el) new Chart(el, cfg);
+});
+<\/script>
+</body>
+</html>`;
 }
 
 function saveAsHTML() {
