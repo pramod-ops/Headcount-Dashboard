@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Headcount Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #eef1f6; color: #1e293b; min-height: 100vh; }
+
+/* ── UPLOAD SCREEN ── */
+#uploadScreen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0e4d8b 100%);
+}
+.upload-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 48px 52px;
+  max-width: 580px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  text-align: center;
+}
+.upload-logo { font-size: 3rem; margin-bottom: 10px; }
+.upload-title { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.upload-sub { font-size: 0.85rem; color: #64748b; margin-bottom: 32px; }
+.drop-zone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 36px 20px;
+  cursor: pointer;
+  transition: all .2s;
+  background: #f8fafc;
+  margin-bottom: 24px;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+.drop-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.drop-text { font-size: 0.95rem; color: #475569; font-weight: 600; }
+.drop-hint { font-size: 0.75rem; color: #94a3b8; margin-top: 5px; }
+#fileInput { display: none; }
+.btn-upload {
+  display: inline-block;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background .2s;
+}
+.btn-upload:hover { background: #2563eb; }
+.period-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.field-label { font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 5px; text-align: left; }
+.field-input {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  color: #1e293b;
+  outline: none;
+  transition: border .2s;
+}
+.field-input:focus { border-color: #3b82f6; }
+.field-name-row { margin-bottom: 20px; text-align: left; }
+.btn-generate {
+  width: 100%;
+  background: linear-gradient(135deg, #1e3a5f, #0e4d8b);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: .3px;
+  transition: opacity .2s;
+  margin-top: 8px;
+}
+.btn-generate:hover { opacity: .9; }
+.btn-generate:disabled { opacity: .4; cursor: not-allowed; }
+.file-selected {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #15803d;
+  font-size: 0.82rem;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-top: 10px;
+  display: none;
+  font-weight: 600;
+}
+
+/* ── DASHBOARD SCREEN ── */
+#dashboardScreen { display: none; }
+
+.header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0e4d8b 100%);
+  color: #fff;
+  padding: 22px 40px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.header-title { font-size: 1.45rem; font-weight: 800; }
+.header-sub { font-size: 0.76rem; color: #94b4d0; margin-top: 3px; }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.header-badge { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; color: #cfe3f5; }
+.header-attrition { background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.5); border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; color: #fca5a5; font-weight: 700; }
+.btn-new-upload { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background .2s; }
+.btn-new-upload:hover { background: rgba(255,255,255,0.25); }
+
+.container { max-width: 1440px; margin: 0 auto; padding: 24px 28px 56px; }
+
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 18px; }
+.kpi { background: #fff; border-radius: 12px; padding: 16px 16px 13px; box-shadow: 0 1px 8px rgba(0,0,0,0.07); border-bottom: 3px solid transparent; position: relative; overflow: hidden; transition: transform .15s; }
+.kpi:hover { transform: translateY(-2px); }
+.kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 12px 12px 0 0; }
+.kpi.c-blue   { border-bottom-color:#3b82f6; } .kpi.c-blue::before   { background:#3b82f6; }
+.kpi.c-teal   { border-bottom-color:#0d9488; } .kpi.c-teal::before   { background:#0d9488; }
+.kpi.c-green  { border-bottom-color:#22c55e; } .kpi.c-green::before  { background:#22c55e; }
+.kpi.c-red    { border-bottom-color:#ef4444; } .kpi.c-red::before    { background:#ef4444; }
+.kpi.c-amber  { border-bottom-color:#f59e0b; } .kpi.c-amber::before  { background:#f59e0b; }
+.kpi.c-purple { border-bottom-color:#8b5cf6; } .kpi.c-purple::before { background:#8b5cf6; }
+.kpi-icon { font-size: 1.2rem; margin-bottom: 6px; }
+.kpi-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: .7px; color: #6b7280; font-weight: 700; }
+.kpi-value { font-size: 1.8rem; font-weight: 900; line-height: 1.1; margin: 4px 0 3px; }
+.kpi.c-blue   .kpi-value { color:#2563eb; }
+.kpi.c-teal   .kpi-value { color:#0f766e; }
+.kpi.c-green  .kpi-value { color:#16a34a; }
+.kpi.c-red    .kpi-value { color:#dc2626; }
+.kpi.c-amber  .kpi-value { color:#d97706; }
+.kpi.c-purple .kpi-value { color:#7c3aed; }
+.kpi-sub { font-size: 0.68rem; color: #9ca3af; }
+
+.section-heading { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin: 22px 0 10px; }
+
+.card { background: #fff; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 8px rgba(0,0,0,0.07); }
+.card-title { font-size: 0.80rem; font-weight: 700; color: #334155; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+.card-title-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-1 { margin-bottom: 16px; }
+
+/* Overall strip */
+.total-strip { background:#1e293b; border-radius:12px; padding:13px 22px; margin-bottom:20px; display:flex; flex-wrap:wrap; align-items:center; gap:0; }
+.strip-label { font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#64748b; margin-right:20px; }
+.strip-items { display:flex; flex-wrap:wrap; gap:22px; flex:1; }
+.strip-item { text-align:center; }
+.strip-item-label { font-size:.56rem; text-transform:uppercase; color:#64748b; font-weight:700; letter-spacing:.5px; }
+.strip-item-val { font-size:1.05rem; font-weight:800; }
+
+/* Pills */
+.pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:.65rem; font-weight:700; white-space:nowrap; }
+.pill-red    { background:#fee2e2; color:#b91c1c; }
+.pill-amber  { background:#fef3c7; color:#92400e; }
+.pill-green  { background:#d1fae5; color:#065f46; }
+.pill-zero   { background:#f1f5f9; color:#94a3b8; }
+
+/* Table */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:.75rem; }
+thead tr { background:#0f172a; color:#e2e8f0; }
+th { padding:9px 11px; text-align:left; font-weight:700; font-size:.62rem; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
+th.r, td.r { text-align:right; }
+tbody tr { border-bottom:1px solid #f1f5f9; }
+tbody tr:hover { background:#f8fafc; }
+td { padding:7px 11px; color:#334155; white-space:nowrap; }
+tr.total-row { background:#1e293b !important; }
+tr.total-row td { color:#f1f5f9; font-weight:700; border:none; }
+
+.badge { display:inline-block; padding:2px 7px; border-radius:7px; font-size:.62rem; font-weight:700; }
+.b-onroll     { background:#ede9fe; color:#5b21b6; }
+.b-offroll    { background:#e0f2fe; color:#075985; }
+.b-consultant { background:#fef9c3; color:#854d0e; }
+.b-intern     { background:#d1fae5; color:#065f46; }
+
+.tag-loc { display:inline-block; padding:1px 7px; border-radius:5px; font-size:.65rem; background:#f1f5f9; color:#475569; }
+.chg-pos { color:#16a34a; font-weight:700; } .chg-neg { color:#dc2626; font-weight:700; } .chg-zero { color:#94a3b8; }
+
+.footer { text-align:center; padding:16px; font-size:.7rem; color:#94a3b8; }
+
+/* Error / info messages */
+.info-banner { background:#fef3c7; border:1px solid #f59e0b; border-radius:10px; padding:12px 18px; font-size:.82rem; color:#92400e; margin-bottom:16px; display:none; }
+
+@media(max-width:1100px){ .kpi-grid { grid-template-columns:repeat(3,1fr); } }
+@media(max-width:900px) { .grid-2,.grid-3 { grid-template-columns:1fr; } .kpi-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:500px) { .kpi-grid { grid-template-columns:1fr 1fr; } .upload-box { padding:32px 24px; } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     UPLOAD SCREEN
+══════════════════════════════════════════════════ -->
+<div id="uploadScreen">
+  <div class="upload-box">
+    <div class="upload-logo">📊</div>
+    <div class="upload-title">Headcount Dashboard</div>
+    <div class="upload-sub">Excel file upload karo — dashboard automatically ban jayega</div>
+
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="drop-icon">📂</div>
+      <div class="drop-text">Click karein ya file yahan drop karein</div>
+      <div class="drop-hint">.xlsx / .xls files supported</div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls">
+    </div>
+    <div class="file-selected" id="fileSelected"></div>
+
+    <div class="field-name-row">
+      <div class="field-label">Dashboard Title (optional)</div>
+      <input type="text" class="field-input" id="dashTitle" placeholder="e.g. March 2026 Headcount">
+    </div>
+
+    <div class="period-row">
+      <div>
+        <div class="field-label">Period Start Date</div>
+        <input type="date" class="field-input" id="periodStart">
+      </div>
+      <div>
+        <div class="field-label">Period End Date</div>
+        <input type="date" class="field-input" id="periodEnd">
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate" disabled onclick="generateDashboard()">
+      Generate Dashboard →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     DASHBOARD SCREEN
+══════════════════════════════════════════════════ -->
+<div id="dashboardScreen">
+  <header class="header">
+    <div>
+      <div class="header-title">📊 <span id="hTitle">Headcount Dashboard</span></div>
+      <div class="header-sub" id="hSub">All Locations · All Employee Types</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-new-upload" onclick="resetToUpload()">⬆ Upload New File</button>
+      <div class="header-badge" id="hBadge">📅 Snapshot</div>
+      <div class="header-attrition" id="hAttrition">⚠️ Overall Attrition: —</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="info-banner" id="infoBanner"></div>
+
+    <!-- ONROLL KPIs -->
+    <div class="section-heading" style="margin-top:0;">🟣 Onroll Headcount</div>
+    <div class="kpi-grid" id="kpiOnroll"></div>
+
+    <!-- OFFROLL KPIs -->
+    <div class="section-heading">🔵 Offroll Headcount <span style="font-weight:500;color:#94a3b8;font-size:.6rem;">(Incl. Consultant &amp; Intern)</span></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:12px;" id="kpiOffroll"></div>
+
+    <!-- OVERALL STRIP -->
+    <div class="total-strip" id="totalStrip"></div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#6366f1;"></span>Onroll — HC by Location</div>
+        <canvas id="chartOnrollLoc" height="220"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#0ea5e9;"></span>Offroll — HC by Team</div>
+        <canvas id="chartOffrollTeam" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- CHART: Total HC by Location -->
+    <div class="section-heading">Overview</div>
+    <div class="grid-1">
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#10b981;"></span>Total Headcount by Location (Opening vs Closing)</div>
+        <canvas id="chartLocation" height="160"></canvas>
+      </div>
+    </div>
+
+    <!-- CHART: By Employee Type (Pie) + By Exit Type -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#f59e0b;"></span>Headcount by Employee Type</div>
+        <canvas id="chartEmpType" height="220"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#ef4444;"></span>Exit Type Breakdown</div>
+        <canvas id="chartExitType" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- CHART: Team-level -->
+    <div class="section-heading">Team-Level Headcount</div>
+    <div class="grid-1">
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#6366f1;"></span>Opening vs Closing HC — by Team (all teams)</div>
+        <canvas id="chartTeams" height="110"></canvas>
+      </div>
+    </div>
+
+    <!-- DETAIL TABLE -->
+    <div class="section-heading">Detailed Register</div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot" style="background:#334155;"></span>Full Headcount Detail — All Segments</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th><th>Location</th><th>Team</th>
+              <th class="r" id="thOpen">Opening HC</th><th class="r">New Joiners</th>
+              <th class="r">Total Exits</th><th class="r">Voluntary</th>
+              <th class="r">Co. Initiated</th><th class="r" id="thClose">Closing HC</th>
+              <th class="r">Avg HC</th><th class="r">Attrition</th><th class="r">Net Change</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="footer" id="footerText">Headcount Dashboard</div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   GLOBALS
+════════════════════════════════════════════ */
+let parsedRows = [];
+let chartInstances = {};
+let openLabel = 'Opening HC';
+let closeLabel = 'Closing HC';
+
+/* ════════════════════════════════════════════
+   FILE UPLOAD HANDLING
+════════════════════════════════════════════ */
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const raw = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      parsedRows = raw;
+
+      const sel = document.getElementById('fileSelected');
+      sel.style.display = 'block';
+      sel.textContent = '✅ ' + file.name + ' — ' + raw.length + ' rows loaded';
+      document.getElementById('btnGenerate').disabled = false;
+
+      // Auto-fill title if empty
+      const titleEl = document.getElementById('dashTitle');
+      if (!titleEl.value) {
+        const name = file.name.replace(/\.(xlsx|xls)$/i, '');
+        titleEl.value = name;
+      }
+    } catch(err) {
+      alert('File read error: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ════════════════════════════════════════════
+   COLUMN DETECTION
+════════════════════════════════════════════ */
+const COL_MAP = {
+  type:     ['onroll/offroll','type','employee type','emp type','employment type','category'],
+  location: ['location','city','city name','loc','office'],
+  team:     ['team','department','dept','function','business unit'],
+  status:   ['status','emp status','employee status','active/inactive'],
+  lwd:      ['lwd','last working day','exit date','last day','lwddate'],
+  exitType: ['type of exit','exit type','separation type','reason','reason for exit'],
+  doj:      ['doj','date of joining','joining date','join date','date joined','doj date'],
+  cluster:  ['cluster'],
+  rm:       ['rm','reporting manager','manager'],
+};
+
+function detectColumns(headers) {
+  const norm = h => h.toString().trim().toLowerCase();
+  const map = {};
+  for (const [field, aliases] of Object.entries(COL_MAP)) {
+    for (const alias of aliases) {
+      const found = headers.find(h => norm(h) === alias);
+      if (found) { map[field] = found; break; }
+    }
+  }
+  return map;
+}
+
+/* ════════════════════════════════════════════
+   DATE HELPERS
+════════════════════════════════════════════ */
+function toDate(val) {
+  if (!val) return null;
+  if (val instanceof Date) return val;
+  // Excel serial number
+  if (typeof val === 'number') {
+    const d = new Date(Math.round((val - 25569) * 86400 * 1000));
+    return isNaN(d) ? null : d;
+  }
+  const d = new Date(val);
+  return isNaN(d) ? null : d;
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function fmtMonthYear(d) {
+  if (!d) return null;
+  const mon = d.toLocaleDateString('en-GB', { month:'short' });
+  const yr  = d.toLocaleDateString('en-GB', { year:'2-digit' });
+  return `${mon}-${yr}`;
+}
+
+function inRange(date, start, end) {
+  if (!date) return false;
+  const d = toDate(date);
+  if (!d) return false;
+  if (start && d < start) return false;
+  if (end && d > end) return false;
+  return true;
+}
+
+/* ════════════════════════════════════════════
+   NORMALIZE EMPLOYEE TYPE
+════════════════════════════════════════════ */
+function normalizeType(val) {
+  const v = (val || '').toString().trim().toLowerCase();
+  if (v.includes('consultant')) return 'Consultant';
+  if (v.includes('intern'))     return 'Intern';
+  if (v.includes('offroll') || v.includes('off roll') || v.includes('off-roll')) return 'Offroll';
+  if (v.includes('onroll')  || v.includes('on roll')  || v.includes('on-roll'))  return 'Onroll';
+  return val || 'Onroll'; // default
+}
+
+/* ════════════════════════════════════════════
+   AGGREGATED FILE DETECTION & PROCESSING
+════════════════════════════════════════════ */
+function isAggregatedFile(headers) {
+  const norm = h => h.toString().trim().toLowerCase();
+  return headers.some(h => {
+    const n = norm(h);
+    return n.includes('closing headcount') || n.includes('opening hc') ||
+           n.includes('total resigned') || n.includes('average hc') ||
+           n.includes('new joiner') || n.includes('closing hc');
+  });
+}
+
+function detectAggColumns(headers) {
+  const norm = h => h.toString().trim().toLowerCase();
+  const aliases = {
+    opening:  ['opening hc', 'opening headcount', 'feb hc', 'opening'],
+    joiners:  ['new joiner', 'new joiners', 'joiner'],
+    exits:    ['total resigned', 'total exits', 'exits'],
+    vol:      ['voluntary resigned', 'voluntary'],
+    co:       ['initiated by company', 'company initiated'],
+    closing:  ['closing headcount', 'closing hc', 'mar hc'],
+    avgHc:    ['average hc', 'avg hc'],
+    attRate:  ['attrition'],
+    netChange:['increased/decreased', 'net change', 'net hc'],
+  };
+  const map = {};
+  for (const [field, als] of Object.entries(aliases)) {
+    for (const alias of als) {
+      const found = headers.find(h => norm(h).includes(alias));
+      if (found) { map[field] = found; break; }
+    }
+  }
+  return map;
+}
+
+function processAggregatedFile(raw, aggCols, baseCols) {
+  let lastType = '', lastLoc = '';
+  const rows = [];
+  raw.forEach(r => {
+    const typeVal = (r[baseCols.type] || '').toString().trim();
+    const locVal  = (r[baseCols.location] || '').toString().trim();
+    if (typeVal) lastType = typeVal;
+    if (locVal)  lastLoc  = locVal;
+
+    const team = (r[baseCols.team] || '').toString().trim();
+    if (!team) return; // skip blank team rows
+    if (lastType.toLowerCase().includes('grand') || lastType.toLowerCase().includes('total')) return;
+
+    const type    = normalizeType(lastType);
+    const loc     = lastLoc || 'Unknown';
+    const toNum   = v => parseFloat((v || '0').toString().replace(/[^0-9.\-]/g, '')) || 0;
+    const opening = toNum(r[aggCols.opening]);
+    const closing = toNum(r[aggCols.closing]);
+    const joiners = toNum(r[aggCols.joiners]);
+    const exits   = toNum(r[aggCols.exits]);
+    const vol     = toNum(r[aggCols.vol]);
+    const co      = toNum(r[aggCols.co]);
+    const avg     = toNum(r[aggCols.avgHc]) || (opening + closing) / 2;
+    const att     = toNum(r[aggCols.attRate]) * (toNum(r[aggCols.attRate]) <= 1 ? 100 : 1) || (avg > 0 ? exits / avg * 100 : 0);
+
+    rows.push({ type, loc, team, opening, closing, joiners, exits, vol, co, avg, att });
+  });
+  return rows;
+}
+
+/* ════════════════════════════════════════════
+   MAIN: GENERATE DASHBOARD
+════════════════════════════════════════════ */
+function generateDashboard() {
+  if (!parsedRows.length) return;
+
+  const headers = Object.keys(parsedRows[0]);
+  const cols = detectColumns(headers);
+
+  const periodStart = document.getElementById('periodStart').value ? new Date(document.getElementById('periodStart').value) : null;
+  const periodEnd   = document.getElementById('periodEnd').value   ? new Date(document.getElementById('periodEnd').value)   : null;
+
+  let rows;
+  const banner = document.getElementById('infoBanner');
+
+  if (isAggregatedFile(headers)) {
+    // ── Aggregated summary file (e.g. Attrition.xlsx)
+    const aggCols = detectAggColumns(headers);
+    rows = processAggregatedFile(parsedRows, aggCols, cols);
+    banner.style.display = 'none';
+  } else {
+    // ── Employee-level file (e.g. March HC.xlsx)
+    const data = parsedRows.map(r => {
+      const status      = (r[cols.status] || '').toString().trim().toLowerCase();
+      const lwdDate     = toDate(r[cols.lwd]);
+      const dojDate     = toDate(r[cols.doj]);
+      const exitTypeRaw = (r[cols.exitType] || '').toString().trim().toLowerCase();
+      const isActive    = status === 'active' || (!cols.status && !lwdDate);
+      const isNewJoiner = periodStart ? inRange(dojDate, periodStart, periodEnd) : false;
+      const isVol       = exitTypeRaw.includes('volunt');
+      const isCo        = exitTypeRaw.includes('co') || exitTypeRaw.includes('company') || exitTypeRaw.includes('initiated');
+      return {
+        type: normalizeType(r[cols.type]),
+        loc:  (r[cols.location] || 'Unknown').toString().trim(),
+        team: (r[cols.team]     || 'Unknown').toString().trim(),
+        isActive, isInactive: !isActive, isNewJoiner, isVol, isCo,
+      };
+    });
+
+    if (!periodStart) {
+      banner.style.display = 'block';
+      banner.textContent = '⚠️ Period dates nahi diye gaye — New Joiners count 0 rahega.';
+    } else {
+      banner.style.display = 'none';
+    }
+
+    const groupKey = r => `${r.type}||${r.loc}||${r.team}`;
+    const groups = {};
+    data.forEach(r => {
+      const k = groupKey(r);
+      if (!groups[k]) groups[k] = { type: r.type, loc: r.loc, team: r.team, closing: 0, exits: 0, joiners: 0, vol: 0, co: 0 };
+      if (r.isActive)    groups[k].closing++;
+      if (r.isInactive)  groups[k].exits++;
+      if (r.isNewJoiner) groups[k].joiners++;
+      if (r.isVol)       groups[k].vol++;
+      if (r.isCo)        groups[k].co++;
+    });
+
+    rows = Object.values(groups).map(g => {
+      const opening = g.closing + g.exits - g.joiners;
+      const avg     = (opening + g.closing) / 2;
+      const att     = avg > 0 ? (g.exits / avg * 100) : 0;
+      return { ...g, opening, avg, att };
+    });
+  }
+
+  // Sort: type priority then by closing desc
+  const typeOrder = { Onroll: 0, Offroll: 1, Consultant: 2, Intern: 3 };
+  rows.sort((a, b) => (typeOrder[a.type] ?? 9) - (typeOrder[b.type] ?? 9) || b.closing - a.closing);
+
+  // Totals
+  const sum = (arr, field) => arr.reduce((s, r) => s + (r[field] || 0), 0);
+  const allOpening  = sum(rows, 'opening');
+  const allClosing  = sum(rows, 'closing');
+  const allExits    = sum(rows, 'exits');
+  const allJoiners  = sum(rows, 'joiners');
+  const allVol      = sum(rows, 'vol');
+  const allCo       = sum(rows, 'co');
+  const allAvg      = (allOpening + allClosing) / 2;
+  const allAtt      = allAvg > 0 ? (allExits / allAvg * 100) : 0;
+
+  // Onroll totals
+  const onrollRows = rows.filter(r => r.type === 'Onroll');
+  const orOpen  = sum(onrollRows, 'opening'),  orClose = sum(onrollRows, 'closing');
+  const orExits = sum(onrollRows, 'exits'),     orJoin  = sum(onrollRows, 'joiners');
+  const orVol   = sum(onrollRows, 'vol'),       orCo    = sum(onrollRows, 'co');
+  const orAvg   = (orOpen + orClose) / 2;
+  const orAtt   = orAvg > 0 ? (orExits / orAvg * 100) : 0;
+
+  // Offroll totals (Offroll + Consultant + Intern)
+  const offrollRows = rows.filter(r => r.type !== 'Onroll');
+  const xrOpen  = sum(offrollRows, 'opening'), xrClose = sum(offrollRows, 'closing');
+  const xrExits = sum(offrollRows, 'exits'),   xrJoin  = sum(offrollRows, 'joiners');
+  const xrVol   = sum(offrollRows, 'vol'),     xrCo    = sum(offrollRows, 'co');
+  const xrAvg   = (xrOpen + xrClose) / 2;
+  const xrAtt   = xrAvg > 0 ? (xrExits / xrAvg * 100) : 0;
+
+  // ── Month labels from period dates
+  openLabel  = (periodStart ? fmtMonthYear(periodStart) : null) || 'Opening HC';
+  closeLabel = (periodEnd   ? fmtMonthYear(periodEnd)   : null) || 'Closing HC';
+
+  // ── Header
+  const title = document.getElementById('dashTitle').value || 'Headcount Dashboard';
+  const periodLabel = periodStart ? `${fmtDate(periodStart)} → ${fmtDate(periodEnd || new Date())}` : 'All Period';
+  document.getElementById('thOpen').textContent  = openLabel;
+  document.getElementById('thClose').textContent = closeLabel;
+  document.getElementById('hTitle').textContent = title;
+  document.getElementById('hSub').textContent   = `Period: ${periodLabel} · All Locations`;
+  document.getElementById('hBadge').textContent = `📅 Snapshot: ${fmtDate(new Date())}`;
+  document.getElementById('hAttrition').textContent = `⚠️ Overall Attrition: ${allAtt.toFixed(2)}%`;
+  document.getElementById('footerText').textContent = `Headcount Dashboard · ${title} · Period: ${periodLabel}`;
+
+  // ── Onroll KPIs
+  document.getElementById('kpiOnroll').innerHTML = `
+    ${kpiCard('c-blue','👥',openLabel, orOpen, 'Start of period')}
+    ${kpiCard('c-teal','✅',closeLabel, orClose, 'End of period')}
+    ${kpiCard('c-green','🎉','New Joiners', orJoin, 'Added this period')}
+    ${kpiCard('c-red','🚪','Exits', orExits, `Vol. ${orVol} · Co. Init. ${orCo}`)}
+    ${kpiCard('c-amber','📉','Attrition Rate', orAtt.toFixed(2)+'%', `Avg HC: ${orAvg.toFixed(0)}`)}
+    ${kpiCard('c-purple','🔢','Net HC Change', (orClose-orOpen>0?'+':'')+(orClose-orOpen), `Joiners: ${orJoin} · Exits: ${orExits}`, orClose-orOpen < 0 ? '#dc2626' : orClose-orOpen > 0 ? '#16a34a' : '#94a3b8')}
+  `;
+
+  // ── Offroll KPIs
+  document.getElementById('kpiOffroll').innerHTML = `
+    ${kpiCard('c-blue','👥',openLabel, xrOpen, 'Start of period', null, 'font-size:1.4rem;')}
+    ${kpiCard('c-teal','✅',closeLabel, xrClose, 'End of period', null, 'font-size:1.4rem;')}
+    ${kpiCard('c-green','🎉','New Joiners', xrJoin, 'Added this period', null, 'font-size:1.4rem;')}
+    ${kpiCard('c-red','🚪','Exits', xrExits, `Vol. ${xrVol} · Co. Init. ${xrCo}`, null, 'font-size:1.4rem;')}
+    ${kpiCard('c-amber','📉','Attrition Rate', xrAtt.toFixed(2)+'%', `Avg HC: ${xrAvg.toFixed(0)}`, null, 'font-size:1.4rem;')}
+  `;
+
+  // ── Total strip
+  const netChange = allClosing - allOpening;
+  document.getElementById('totalStrip').innerHTML = `
+    <span class="strip-label">Overall Total</span>
+    <div class="strip-items">
+      ${stripItem(openLabel, allOpening, '#93c5fd')}
+      ${stripItem(closeLabel, allClosing, '#6ee7b7')}
+      ${stripItem('New Joiners', allJoiners, '#86efac')}
+      ${stripItem('Total Exits', allExits, '#fca5a5')}
+      ${stripItem('Attrition', allAtt.toFixed(2)+'%', '#fcd34d')}
+      ${stripItem('Net Change', (netChange>0?'+':'')+netChange, netChange<0?'#f87171':'#86efac')}
+    </div>
+  `;
+
+  // ── Charts
+  destroyCharts();
+  renderChartLocation(rows);
+  renderChartTeams(rows);
+  renderChartOnrollLoc(onrollRows);
+  renderChartOffrollTeam(offrollRows);
+  renderChartEmpType(rows);
+  renderChartExitType(allVol, allCo, allExits - allVol - allCo);
+
+  // ── Table
+  renderTable(rows, allOpening, allJoiners, allExits, allVol, allCo, allClosing, allAvg, allAtt);
+
+  // Show dashboard
+  document.getElementById('uploadScreen').style.display = 'none';
+  document.getElementById('dashboardScreen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+/* ════════════════════════════════════════════
+   UI HELPERS
+════════════════════════════════════════════ */
+function kpiCard(cls, icon, label, value, sub, color, valStyle) {
+  const valColor = color ? `color:${color};` : '';
+  const vStyle = (valStyle || '') + valColor;
+  return `<div class="kpi ${cls}">
+    <div class="kpi-icon">${icon}</div>
+    <div class="kpi-label">${label}</div>
+    <div class="kpi-value" style="${vStyle}">${value}</div>
+    <div class="kpi-sub">${sub}</div>
+  </div>`;
+}
+
+function stripItem(label, val, color) {
+  return `<div class="strip-item">
+    <div class="strip-item-label">${label}</div>
+    <div class="strip-item-val" style="color:${color}">${val}</div>
+  </div>`;
+}
+
+function resetToUpload() {
+  document.getElementById('dashboardScreen').style.display = 'none';
+  document.getElementById('uploadScreen').style.display = 'flex';
+  document.getElementById('fileSelected').style.display = 'none';
+  document.getElementById('btnGenerate').disabled = true;
+  document.getElementById('fileInput').value = '';
+  parsedRows = [];
+}
+
+/* ════════════════════════════════════════════
+   CHART HELPERS
+════════════════════════════════════════════ */
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#64748b';
+Chart.register(ChartDataLabels);
+
+function hex2rgba(h, a) {
+  const n = parseInt(h.slice(1), 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+
+function destroyCharts() {
+  Object.values(chartInstances).forEach(c => c.destroy());
+  chartInstances = {};
+}
+
+function groupBy(arr, key, fields) {
+  const m = {};
+  arr.forEach(r => {
+    const k = r[key] || '(blank)';
+    if (!m[k]) { m[k] = { label: k }; fields.forEach(f => m[k][f] = 0); }
+    fields.forEach(f => m[k][f] += (r[f] || 0));
+  });
+  return Object.values(m);
+}
+
+function barChart(id, labels, datasets, opts = {}) {
+  const el = document.getElementById(id);
+  chartInstances[id] = new Chart(el, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12 } },
+        datalabels: { display: false }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 30, ...opts.xTicks } },
+        y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
+      },
+      ...opts.extra
+    }
+  });
+}
+
+function renderChartLocation(rows) {
+  const byLoc = groupBy(rows, 'loc', ['opening', 'closing']);
+  byLoc.sort((a, b) => b.opening - a.opening);
+  barChart('chartLocation',
+    byLoc.map(d => d.label),
+    [
+      { label: openLabel, data: byLoc.map(d => d.opening), backgroundColor: '#6366f1', borderRadius: 6 },
+      { label: closeLabel, data: byLoc.map(d => d.closing), backgroundColor: '#22c55e', borderRadius: 6 },
+    ]
+  );
+}
+
+function renderChartTeams(rows) {
+  const byTeam = groupBy(rows, 'team', ['opening', 'closing']);
+  byTeam.sort((a, b) => b.opening - a.opening);
+  barChart('chartTeams',
+    byTeam.map(d => d.label),
+    [
+      { label: openLabel, data: byTeam.map(d => d.opening), backgroundColor: hex2rgba('#3b82f6', 0.75), borderRadius: 4 },
+      { label: closeLabel, data: byTeam.map(d => d.closing), backgroundColor: hex2rgba('#0d9488', 0.75), borderRadius: 4 },
+    ]
+  );
+}
+
+function renderChartOnrollLoc(onrollRows) {
+  const byLoc = groupBy(onrollRows, 'loc', ['opening', 'closing']);
+  byLoc.sort((a, b) => b.opening - a.opening);
+  barChart('chartOnrollLoc',
+    byLoc.map(d => d.label),
+    [
+      { label: openLabel, data: byLoc.map(d => d.opening), backgroundColor: hex2rgba('#6366f1', 0.8), borderRadius: 6 },
+      { label: closeLabel, data: byLoc.map(d => d.closing), backgroundColor: hex2rgba('#22c55e', 0.8), borderRadius: 6 },
+    ]
+  );
+}
+
+function renderChartOffrollTeam(offRows) {
+  const byTeam = groupBy(offRows, 'team', ['opening', 'closing']);
+  byTeam.sort((a, b) => b.opening - a.opening);
+  barChart('chartOffrollTeam',
+    byTeam.map(d => d.label),
+    [
+      { label: openLabel, data: byTeam.map(d => d.opening), backgroundColor: hex2rgba('#0ea5e9', 0.8), borderRadius: 6 },
+      { label: closeLabel, data: byTeam.map(d => d.closing), backgroundColor: hex2rgba('#14b8a6', 0.8), borderRadius: 6 },
+    ]
+  );
+}
+
+function renderChartEmpType(rows) {
+  const byType = groupBy(rows, 'type', ['closing']);
+  const COLORS = { Onroll: '#6366f1', Offroll: '#0ea5e9', Consultant: '#f59e0b', Intern: '#22c55e' };
+  const el = document.getElementById('chartEmpType');
+  chartInstances['chartEmpType'] = new Chart(el, {
+    type: 'doughnut',
+    data: {
+      labels: byType.map(d => d.label),
+      datasets: [{
+        data: byType.map(d => d.closing),
+        backgroundColor: byType.map(d => COLORS[d.label] || '#94a3b8'),
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12 } },
+        datalabels: {
+          display: true, color: '#fff', font: { weight: 'bold', size: 12 },
+          formatter: (v, ctx) => {
+            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+            return total ? Math.round(v/total*100) + '%' : '';
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderChartExitType(vol, co, other) {
+  const labels = [], vals = [], colors = [];
+  if (vol > 0)   { labels.push('Voluntary');    vals.push(vol);   colors.push('#f59e0b'); }
+  if (co > 0)    { labels.push('Co. Initiated'); vals.push(co);    colors.push('#ef4444'); }
+  if (other > 0) { labels.push('Other');         vals.push(other); colors.push('#94a3b8'); }
+  if (!vals.length) { labels.push('No Exits'); vals.push(1); colors.push('#d1fae5'); }
+
+  const el = document.getElementById('chartExitType');
+  chartInstances['chartExitType'] = new Chart(el, {
+    type: 'pie',
+    data: {
+      labels,
+      datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12 } },
+        datalabels: {
+          display: true, color: '#fff', font: { weight: 'bold', size: 12 },
+          formatter: (v, ctx) => {
+            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+            return (total && v !== 1) ? v + '\n(' + Math.round(v/total*100) + '%)' : '';
+          }
+        }
+      }
+    }
+  });
+}
+
+/* ════════════════════════════════════════════
+   TABLE
+════════════════════════════════════════════ */
+function renderTable(rows, totalOpen, totalJoin, totalExits, totalVol, totalCo, totalClose, totalAvg, totalAtt) {
+  const tbody = document.getElementById('tableBody');
+  const typeClass = { Consultant:'b-consultant', Intern:'b-intern', Onroll:'b-onroll', Offroll:'b-offroll' };
+  let html = '';
+
+  rows.forEach(r => {
+    const chg = r.closing - r.opening;
+    const attPillClass = r.att === 0 ? 'pill-zero' : r.att >= 30 ? 'pill-red' : r.att >= 10 ? 'pill-amber' : 'pill-green';
+    const chgClass = chg > 0 ? 'chg-pos' : chg < 0 ? 'chg-neg' : 'chg-zero';
+    const attText = r.att > 0 ? r.att.toFixed(2) + '%' : '—';
+    html += `<tr>
+      <td><span class="badge ${typeClass[r.type]||'b-offroll'}">${r.type}</span></td>
+      <td><span class="tag-loc">${r.loc}</span></td>
+      <td>${r.team}</td>
+      <td class="r" style="font-weight:600;">${r.opening}</td>
+      <td class="r">${r.joiners || '—'}</td>
+      <td class="r">${r.exits   || '—'}</td>
+      <td class="r">${r.vol     || '—'}</td>
+      <td class="r">${r.co      || '—'}</td>
+      <td class="r" style="font-weight:600;">${r.closing}</td>
+      <td class="r">${r.avg % 1 === 0 ? r.avg : r.avg.toFixed(1)}</td>
+      <td class="r"><span class="pill ${attPillClass}">${attText}</span></td>
+      <td class="r ${chgClass}">${chg > 0 ? '+'+chg : chg}</td>
+    </tr>`;
+  });
+
+  const netChange = totalClose - totalOpen;
+  const totalAttPill = totalAtt === 0 ? 'pill-zero' : totalAtt >= 30 ? 'pill-red' : totalAtt >= 10 ? 'pill-amber' : 'pill-green';
+  html += `<tr class="total-row">
+    <td colspan="3">Grand Total</td>
+    <td class="r">${totalOpen}</td>
+    <td class="r">${totalJoin || '—'}</td>
+    <td class="r">${totalExits || '—'}</td>
+    <td class="r">${totalVol || '—'}</td>
+    <td class="r">${totalCo || '—'}</td>
+    <td class="r">${totalClose}</td>
+    <td class="r">${totalAvg % 1 === 0 ? totalAvg : totalAvg.toFixed(1)}</td>
+    <td class="r"><span class="pill ${totalAttPill}">${totalAtt.toFixed(2)}%</span></td>
+    <td class="r" style="color:${netChange<0?'#ef4444':'#86efac'}">${netChange>0?'+'+netChange:netChange}</td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+</script>
+</body>
+</html>
