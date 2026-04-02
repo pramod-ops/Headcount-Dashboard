@@ -132,6 +132,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #eef1f6; colo
 .header-attrition { background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.5); border-radius: 20px; padding: 4px 14px; font-size: 0.75rem; color: #fca5a5; font-weight: 700; }
 .btn-new-upload { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background .2s; }
 .btn-new-upload:hover { background: rgba(255,255,255,0.25); }
+.btn-save-html { background: rgba(34,197,94,0.25); border: 1px solid rgba(34,197,94,0.5); color: #86efac; border-radius: 8px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background .2s; }
+.btn-save-html:hover { background: rgba(34,197,94,0.4); }
 
 .container { max-width: 1440px; margin: 0 auto; padding: 24px 28px 56px; }
 
@@ -264,6 +266,7 @@ tr.total-row td { color:#f1f5f9; font-weight:700; border:none; }
       <div class="header-sub" id="hSub">All Locations · All Employee Types</div>
     </div>
     <div class="header-right">
+      <button class="btn-save-html" onclick="saveAsHTML()">💾 Save as HTML</button>
       <button class="btn-new-upload" onclick="resetToUpload()">⬆ Upload New File</button>
       <div class="header-badge" id="hBadge">📅 Snapshot</div>
       <div class="header-attrition" id="hAttrition">⚠️ Overall Attrition: —</div>
@@ -732,6 +735,53 @@ function resetToUpload() {
   document.getElementById('btnGenerate').disabled = true;
   document.getElementById('fileInput').value = '';
   parsedRows = [];
+}
+
+function saveAsHTML() {
+  // Clone the dashboard node
+  const dash = document.getElementById('dashboardScreen').cloneNode(true);
+
+  // Replace every <canvas> with a static <img> using its data URL
+  const canvases = document.getElementById('dashboardScreen').querySelectorAll('canvas');
+  const imgs     = dash.querySelectorAll('canvas');
+  canvases.forEach((cv, i) => {
+    const img = document.createElement('img');
+    img.src   = cv.toDataURL('image/png');
+    img.style.cssText = `width:100%;height:${cv.height}px;display:block;`;
+    imgs[i].replaceWith(img);
+  });
+
+  // Remove interactive buttons from the saved copy
+  dash.querySelectorAll('.btn-save-html, .btn-new-upload').forEach(b => b.remove());
+
+  // Extract CSS from the page
+  const styles = Array.from(document.styleSheets)
+    .map(ss => { try { return Array.from(ss.cssRules).map(r => r.cssText).join('\n'); } catch { return ''; } })
+    .join('\n');
+
+  const title = document.getElementById('hTitle')?.textContent || 'Headcount Dashboard';
+  const date  = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${title}</title>
+<style>${styles}</style>
+</head>
+<body>
+${dash.outerHTML}
+<div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on ${date}</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `${title.replace(/[^a-z0-9]/gi,'_')}_${date.replace(/ /g,'-')}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 /* ════════════════════════════════════════════
