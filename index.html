@@ -775,14 +775,7 @@ async function shareAsLink() {
   // Get or prompt for GitHub PAT
   let token = localStorage.getItem('gh_share_pat');
   if (!token) {
-    token = prompt(
-      'Enter your GitHub Personal Access Token (PAT) to share dashboards via a link.\n\n' +
-      'How to create one:\n' +
-      '1. Go to github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)\n' +
-      '2. Generate new token → Select scope: "repo"\n' +
-      '3. Copy and paste here\n\n' +
-      'This is stored locally in your browser only.'
-    );
+    token = prompt('Enter GitHub Token to enable Share Link (one-time setup):');
     if (!token || !token.trim()) return;
     localStorage.setItem('gh_share_pat', token.trim());
   }
