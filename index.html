@@ -154,6 +154,22 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #eef1f6; colo
 .share-spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; vertical-align:middle; margin-right:5px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
+/* Token Setup Modal */
+#tokenModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:10000; align-items:center; justify-content:center; }
+#tokenModal.open { display:flex; }
+.token-box { background:#fff; border-radius:16px; padding:32px; max-width:480px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.token-box h3 { font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:6px; }
+.token-box p { font-size:0.78rem; color:#64748b; margin-bottom:4px; line-height:1.5; }
+.token-steps { background:#f8fafc; border-radius:10px; padding:12px 16px; margin:12px 0 16px; font-size:0.75rem; color:#475569; line-height:1.8; }
+.token-steps b { color:#0f172a; }
+.token-input-row { display:flex; gap:8px; }
+.token-input { flex:1; border:1.5px solid #e2e8f0; border-radius:8px; padding:9px 12px; font-size:0.82rem; color:#1e293b; outline:none; font-family:monospace; }
+.token-input:focus { border-color:#8b5cf6; }
+.token-save-btn { background:#6366f1; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:0.82rem; font-weight:700; cursor:pointer; }
+.token-save-btn:hover { background:#4f46e5; }
+.token-cancel-btn { margin-top:12px; width:100%; background:#f1f5f9; border:none; border-radius:8px; padding:9px; font-size:0.82rem; font-weight:600; cursor:pointer; color:#475569; }
+.token-cancel-btn:hover { background:#e2e8f0; }
+
 .container { max-width: 1440px; margin: 0 auto; padding: 24px 28px 56px; }
 
 /* KPI */
@@ -370,6 +386,26 @@ tr.total-row td { color:#f1f5f9; font-weight:700; border:none; }
     </div>
   </div>
   <div class="footer" id="footerText">Headcount Dashboard</div>
+</div>
+
+<!-- Token Setup Modal -->
+<div id="tokenModal">
+  <div class="token-box">
+    <h3>🔑 One-Time Setup: GitHub Token</h3>
+    <p>Required to publish dashboards and get shareable links.</p>
+    <div class="token-steps">
+      <b>How to get your token:</b><br>
+      1. Go to <b>github.com → Settings → Developer settings</b><br>
+      2. Click <b>Personal access tokens → Tokens (classic)</b><br>
+      3. Click <b>Generate new token</b> → select scope: <b>repo</b><br>
+      4. Copy the token and paste below
+    </div>
+    <div class="token-input-row">
+      <input class="token-input" id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <button class="token-save-btn" onclick="saveToken()">Save &amp; Share</button>
+    </div>
+    <button class="token-cancel-btn" onclick="document.getElementById('tokenModal').classList.remove('open')">Cancel</button>
+  </div>
 </div>
 
 <!-- Share Modal -->
@@ -771,15 +807,26 @@ function resetToUpload() {
   parsedRows = [];
 }
 
+function saveToken() {
+  const val = document.getElementById('tokenInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('gh_share_pat', val);
+  document.getElementById('tokenModal').classList.remove('open');
+  doShare(val);
+}
+
 async function shareAsLink() {
-  // Get or prompt for GitHub PAT
-  let token = localStorage.getItem('gh_share_pat');
+  const token = localStorage.getItem('gh_share_pat');
   if (!token) {
-    token = prompt('Enter GitHub Token to enable Share Link (one-time setup):');
-    if (!token || !token.trim()) return;
-    localStorage.setItem('gh_share_pat', token.trim());
+    document.getElementById('tokenInput').value = '';
+    document.getElementById('tokenModal').classList.add('open');
+    document.getElementById('tokenInput').focus();
+    return;
   }
-  token = token.trim();
+  doShare(token);
+}
+
+async function doShare(token) {
 
   const btn = document.getElementById('btnShareLink');
   btn.innerHTML = '<span class="share-spinner"></span>Publishing...';
