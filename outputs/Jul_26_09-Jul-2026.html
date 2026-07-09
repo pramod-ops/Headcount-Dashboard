@@ -1,0 +1,1326 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Jul-26</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>*, ::before, ::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+:root { --bg: #0d1117; --surface: #161b22; --surface2: #1e2432; --border: rgba(255,255,255,.08); --shadow: 0 1px 3px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.5); --shadow-md: 0 4px 24px rgba(0,0,0,.6), 0 1px 4px rgba(0,0,0,.4); --text: #e2e8f0; --muted: #94a3b8; --faint: #64748b; --navy: #060d1f; --blue: #3b82f6; --green: #10b981; --red: #f87171; --amber: #fbbf24; --purple: #a78bfa; --r: 14px; }
+body { font-family: "Segoe UI", -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+@keyframes fadeUp { 
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes spin { 
+  100% { transform: rotate(360deg); }
+}
+#uploadScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; position: relative; overflow: hidden; background: linear-gradient(160deg, rgb(6, 13, 31) 0%, rgb(11, 29, 66) 40%, rgb(10, 21, 48) 70%, rgb(3, 10, 24) 100%); }
+#uploadScreen::before { content: ""; position: absolute; top: -30%; left: -20%; width: 60%; aspect-ratio: 1 / 1; background: radial-gradient(circle, rgba(29, 78, 216, 0.32) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+#uploadScreen::after { content: ""; position: absolute; bottom: -25%; right: -15%; width: 55%; aspect-ratio: 1 / 1; background: radial-gradient(circle, rgba(124, 58, 237, 0.26) 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+.upload-box { background: rgba(22, 27, 34, 0.92); backdrop-filter: blur(24px); border-radius: 24px; padding: 50px 52px 44px; max-width: 560px; width: 100%; box-shadow: rgba(0, 0, 0, 0.7) 0px 40px 100px, rgba(255, 255, 255, 0.07) 0px 0px 0px 1px; text-align: center; position: relative; z-index: 2; animation: 0.35s ease 0s 1 normal both running fadeUp; }
+.upload-logo { font-size: 2.8rem; margin-bottom: 4px; }
+.upload-badge { display: inline-block; background: linear-gradient(90deg, rgb(29, 78, 216), rgb(124, 58, 237)); color: rgb(255, 255, 255); font-size: 0.56rem; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; padding: 2px 12px; border-radius: 20px; margin-bottom: 10px; }
+.upload-title { font-size: 1.75rem; font-weight: 900; color: rgb(241, 245, 249); margin-bottom: 5px; letter-spacing: -0.4px; }
+.upload-sub { font-size: 0.81rem; color: rgb(100, 116, 139); margin-bottom: 30px; line-height: 1.55; }
+.drop-zone { border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 28px 20px; cursor: pointer; transition: 0.2s; background: rgba(255, 255, 255, 0.04); margin-bottom: 20px; }
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--blue); background: rgba(59, 130, 246, 0.08); border-style: solid; }
+.drop-icon { font-size: 2.1rem; margin-bottom: 8px; }
+.drop-text { font-size: 0.87rem; color: rgb(203, 213, 225); font-weight: 700; }
+.drop-hint { font-size: 0.7rem; color: rgb(100, 116, 139); margin-top: 4px; }
+#fileInput { display: none; }
+.period-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.field-label { font-size: 0.65rem; font-weight: 800; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; text-align: left; }
+.field-input { width: 100%; border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 9px; padding: 9px 12px; font-size: 0.83rem; color: rgb(226, 232, 240); outline: none; transition: border 0.15s, box-shadow 0.15s; background: rgba(255, 255, 255, 0.07); }
+.field-input:focus { border-color: var(--blue); box-shadow: rgba(59, 130, 246, 0.2) 0px 0px 0px 3px; }
+.field-name-row { margin-bottom: 16px; text-align: left; }
+.btn-generate { width: 100%; background: linear-gradient(135deg, rgb(29, 78, 216) 0%, rgb(124, 58, 237) 100%); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 12px; padding: 15px; font-size: 1rem; font-weight: 800; cursor: pointer; letter-spacing: 0.1px; transition: opacity 0.2s, transform 0.12s, box-shadow 0.2s; margin-top: 8px; box-shadow: rgba(29, 78, 216, 0.4) 0px 6px 24px; }
+.btn-generate:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: rgba(29, 78, 216, 0.5) 0px 10px 32px; }
+.btn-generate:active { transform: translateY(0px); }
+.btn-generate:disabled { opacity: 0.38; cursor: not-allowed; transform: none; box-shadow: none; }
+.file-selected { background: rgba(16, 185, 129, 0.12); color: rgb(110, 231, 183); font-size: 0.75rem; border-radius: 9px; padding: 8px 14px; margin-top: 10px; display: none; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3); text-align: left; }
+#dashboardScreen { display: none; }
+.header { background: linear-gradient(135deg, rgb(6, 13, 31) 0%, rgb(11, 29, 66) 55%, rgb(10, 15, 64) 100%); color: rgb(255, 255, 255); padding: 15px 32px 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: rgba(0, 0, 0, 0.42) 0px 4px 32px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); position: relative; overflow: hidden; }
+.header::before { content: ""; position: absolute; top: -80%; right: -4%; width: 320px; aspect-ratio: 1 / 1; background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+.header > div:first-child { position: relative; z-index: 1; }
+.header-title { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.2px; display: flex; align-items: center; gap: 10px; }
+.header-sub { font-size: 0.67rem; color: rgb(110, 143, 173); margin-top: 3px; }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; position: relative; z-index: 1; }
+.header-right-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.header-badge { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 20px; padding: 3px 12px; font-size: 0.66rem; color: rgb(158, 181, 204); }
+.header-attrition { background: rgba(220, 38, 38, 0.18); border: 1px solid rgba(220, 38, 38, 0.38); border-radius: 20px; padding: 3px 12px; font-size: 0.66rem; color: rgb(252, 165, 165); font-weight: 800; }
+.btn-new-upload { background: rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.17); color: rgb(221, 230, 239); border-radius: 8px; padding: 5px 13px; font-size: 0.68rem; cursor: pointer; font-weight: 700; transition: background 0.18s; }
+.btn-new-upload:hover { background: rgba(255, 255, 255, 0.18); }
+.btn-save-html { background: rgba(5, 150, 105, 0.17); border: 1px solid rgba(5, 150, 105, 0.38); color: rgb(110, 231, 183); border-radius: 8px; padding: 5px 13px; font-size: 0.68rem; cursor: pointer; font-weight: 700; transition: background 0.18s; }
+.btn-save-html:hover { background: rgba(5, 150, 105, 0.3); }
+.btn-share-link { background: rgba(124, 58, 237, 0.2); border: 1px solid rgba(124, 58, 237, 0.42); color: rgb(196, 181, 253); border-radius: 8px; padding: 5px 13px; font-size: 0.68rem; cursor: pointer; font-weight: 700; transition: background 0.18s; }
+.btn-share-link:hover { background: rgba(124, 58, 237, 0.35); }
+.btn-share-link:disabled { opacity: 0.44; cursor: not-allowed; }
+.tab-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0px 28px; display: flex; gap: 0px; position: sticky; top: 0px; z-index: 100; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 10px; overflow-x: auto; }
+.tab-btn { background: none; border-width: medium medium 2.5px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; padding: 13px 18px; font-size: 0.74rem; font-weight: 700; color: var(--faint); cursor: pointer; transition: 0.18s; white-space: nowrap; margin-bottom: -1px; letter-spacing: 0.1px; }
+.tab-btn:hover { color: var(--muted); background: var(--surface2); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); background: rgba(59, 130, 246, 0.1); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: 0.22s ease 0s 1 normal both running fadeUp; }
+#shareModal { display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; }
+#shareModal.open { display: flex; }
+.share-box { background: var(--surface); border-radius: 18px; padding: 32px; max-width: 520px; width: 90%; box-shadow: rgba(0, 0, 0, 0.6) 0px 32px 80px; animation: 0.22s ease 0s 1 normal both running fadeUp; border: 1px solid var(--border); }
+.share-box h3 { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.share-box p { font-size: 0.78rem; color: var(--muted); margin-bottom: 18px; }
+.share-url-row { display: flex; gap: 8px; align-items: center; }
+.share-url-input { flex: 1 1 0%; border: 1.5px solid var(--border); border-radius: 9px; padding: 9px 12px; font-size: 0.76rem; color: var(--text); background: var(--surface2); outline: none; }
+.share-copy-btn { background: linear-gradient(135deg, rgb(99, 102, 241), rgb(139, 92, 246)); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 9px; padding: 9px 16px; font-size: 0.76rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.share-note { font-size: 0.7rem; color: var(--faint); margin-top: 10px; }
+.share-close { margin-top: 18px; width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 9px; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--muted); }
+.share-spinner { display: inline-block; width: 12px; height: 12px; border-width: 2px; border-style: solid; border-color: rgb(255, 255, 255) rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.4); border-image: none; border-radius: 50%; animation: 0.7s linear 0s infinite normal none running spin; vertical-align: middle; margin-right: 5px; }
+#tokenModal { display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
+#tokenModal.open { display: flex; }
+.token-box { background: var(--surface); border-radius: 18px; padding: 32px; max-width: 480px; width: 90%; box-shadow: rgba(0, 0, 0, 0.6) 0px 32px 80px; animation: 0.22s ease 0s 1 normal both running fadeUp; border: 1px solid var(--border); }
+.token-box h3 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.token-box p { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+.token-steps { background: var(--surface2); border-radius: 10px; padding: 12px 16px; margin: 12px 0px 16px; font-size: 0.72rem; color: var(--muted); line-height: 1.8; border: 1px solid var(--border); }
+.token-input-row { display: flex; gap: 8px; }
+.token-input { flex: 1 1 0%; border: 1.5px solid var(--border); border-radius: 9px; padding: 9px 12px; font-size: 0.8rem; color: var(--text); background: var(--surface2); outline: none; font-family: monospace; }
+.token-save-btn { background: linear-gradient(135deg, rgb(99, 102, 241), rgb(139, 92, 246)); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 9px; padding: 9px 18px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+.token-cancel-btn { margin-top: 12px; width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 9px; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--muted); }
+.container { max-width: 1440px; margin: 0px auto; padding: 20px 28px 56px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; margin-bottom: 16px; }
+.kpi-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 11px; margin-bottom: 16px; }
+.kpi { background: var(--surface); border-radius: 15px; padding: 16px 16px 13px; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
+.kpi:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.kpi::before { content: ""; position: absolute; top: 0px; left: 0px; right: 0px; height: 3.5px; border-radius: 15px 15px 0px 0px; }
+.kpi.c-blue { background: linear-gradient(155deg,var(--surface) 62%,rgba(59,130,246,.12)); }
+.kpi.c-blue::before { background: linear-gradient(90deg, rgb(29, 78, 216), rgb(96, 165, 250)); }
+.kpi.c-teal { background: linear-gradient(155deg,var(--surface) 62%,rgba(8,145,178,.12)); }
+.kpi.c-teal::before { background: linear-gradient(90deg, rgb(8, 145, 178), rgb(34, 211, 238)); }
+.kpi.c-green { background: linear-gradient(155deg,var(--surface) 62%,rgba(16,185,129,.12)); }
+.kpi.c-green::before { background: linear-gradient(90deg, rgb(5, 150, 105), rgb(52, 211, 153)); }
+.kpi.c-red { background: linear-gradient(155deg,var(--surface) 62%,rgba(248,113,113,.12)); }
+.kpi.c-red::before { background: linear-gradient(90deg, rgb(220, 38, 38), rgb(248, 113, 113)); }
+.kpi.c-amber { background: linear-gradient(155deg,var(--surface) 62%,rgba(251,191,36,.12)); }
+.kpi.c-amber::before { background: linear-gradient(90deg, rgb(217, 119, 6), rgb(251, 191, 36)); }
+.kpi.c-purple { background: linear-gradient(155deg,var(--surface) 62%,rgba(167,139,250,.12)); }
+.kpi.c-purple::before { background: linear-gradient(90deg, rgb(124, 58, 237), rgb(167, 139, 250)); }
+.kpi.c-indigo { background: linear-gradient(155deg,var(--surface) 62%,rgba(129,140,248,.12)); }
+.kpi.c-indigo::before { background: linear-gradient(90deg, rgb(67, 56, 202), rgb(129, 140, 248)); }
+.kpi.c-rose { background: linear-gradient(155deg,var(--surface) 62%,rgba(251,113,133,.12)); }
+.kpi.c-rose::before { background: linear-gradient(90deg, rgb(225, 29, 72), rgb(251, 113, 133)); }
+.kpi-icon { font-size: 1.25rem; margin-bottom: 5px; }
+.kpi-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 1px; color: var(--faint); font-weight: 800; }
+.kpi-value { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 4px 0px 3px; }
+.kpi.c-blue .kpi-value { color: rgb(96, 165, 250); }
+.kpi.c-teal .kpi-value { color: rgb(34, 211, 238); }
+.kpi.c-green .kpi-value { color: rgb(52, 211, 153); }
+.kpi.c-red .kpi-value { color: rgb(248, 113, 113); }
+.kpi.c-amber .kpi-value { color: rgb(251, 191, 36); }
+.kpi.c-purple .kpi-value { color: rgb(167, 139, 250); }
+.kpi.c-indigo .kpi-value { color: rgb(129, 140, 248); }
+.kpi.c-rose .kpi-value { color: rgb(251, 113, 133); }
+.kpi-sub { font-size: 0.63rem; color: var(--faint); font-weight: 500; }
+.section-heading { font-size: 0.56rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.7px; color: var(--faint); margin: 22px 0px 11px; display: flex; align-items: center; gap: 10px; }
+.section-heading::after { content: ""; flex: 1 1 0%; height: 1px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent); }
+.card { background: var(--surface); border-radius: 15px; padding: 18px 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.card-title { font-size: 0.76rem; font-weight: 700; color: var(--muted); margin-bottom: 13px; display: flex; align-items: center; gap: 7px; }
+.card-title-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.insights-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; margin-bottom: 18px; }
+.insight-card { background: var(--surface); border-radius: 14px; padding: 14px 15px; box-shadow: var(--shadow); border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-left: 3.5px solid; transition: transform 0.18s, box-shadow 0.18s; }
+.insight-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.insight-icon { font-size: 1.35rem; margin-bottom: 5px; }
+.insight-title { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.9px; color: var(--faint); font-weight: 800; margin-bottom: 3px; }
+.insight-value { font-size: 1.05rem; font-weight: 800; line-height: 1.2; margin-bottom: 3px; }
+.insight-desc { font-size: 0.63rem; color: var(--muted); line-height: 1.45; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 13px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; margin-bottom: 13px; }
+.grid-1 { margin-bottom: 13px; }
+.total-strip { background: linear-gradient(135deg, rgb(6, 13, 31) 0%, rgb(11, 29, 66) 100%); border-radius: 13px; padding: 12px 22px; margin-bottom: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 0px; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 20px; border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; }
+.total-strip::after { content: ""; position: absolute; right: 0px; top: 0px; bottom: 0px; width: 180px; background: radial-gradient(at right center, rgba(124, 58, 237, 0.22), transparent 70%); pointer-events: none; }
+.strip-label { font-size: 0.54rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.4px; color: rgb(61, 82, 104); margin-right: 20px; white-space: nowrap; }
+.strip-items { display: flex; flex-wrap: wrap; gap: 22px; flex: 1 1 0%; }
+.strip-item { text-align: center; }
+.strip-item-label { font-size: 0.49rem; text-transform: uppercase; color: rgb(90, 113, 144); font-weight: 700; letter-spacing: 0.5px; }
+.strip-item-val { font-size: 1rem; font-weight: 900; }
+.table-wrap { border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+thead tr { background: linear-gradient(90deg, rgb(6, 13, 31), rgb(11, 29, 66)); color: rgb(226, 232, 240); }
+th { padding: 9px 11px; text-align: left; font-weight: 800; font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
+th.r, td.r { text-align: right; }
+tbody tr:nth-child(2n+1) { background: var(--surface); }
+tbody tr:nth-child(2n) { background: var(--surface2); }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+tbody tr:hover { background: rgba(59, 130, 246, 0.08); }
+td { padding: 7px 11px; color: var(--muted); white-space: nowrap; }
+tr.total-row { background: linear-gradient(90deg, rgb(6, 13, 31), rgb(11, 29, 66)) !important; }
+tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.57rem; font-weight: 700; }
+.b-onroll { background: rgba(139, 92, 246, 0.2); color: rgb(196, 181, 253); }
+.b-offroll { background: rgba(14, 165, 233, 0.2); color: rgb(125, 211, 252); }
+.b-consultant { background: rgba(234, 179, 8, 0.2); color: rgb(253, 230, 138); }
+.b-intern { background: rgba(16, 185, 129, 0.2); color: rgb(110, 231, 183); }
+.tag-loc { display: inline-block; padding: 1px 6px; border-radius: 5px; font-size: 0.62rem; background: rgba(255, 255, 255, 0.08); color: var(--muted); font-weight: 600; }
+.pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.61rem; font-weight: 700; white-space: nowrap; }
+.pill-red { background: rgba(248, 113, 113, 0.18); color: rgb(252, 165, 165); }
+.pill-amber { background: rgba(251, 191, 36, 0.18); color: rgb(253, 230, 138); }
+.pill-green { background: rgba(52, 211, 153, 0.18); color: rgb(110, 231, 183); }
+.pill-zero { background: rgba(255, 255, 255, 0.07); color: var(--faint); }
+.chg-pos { color: rgb(52, 211, 153); font-weight: 700; }
+.chg-neg { color: rgb(248, 113, 113); font-weight: 700; }
+.chg-zero { color: var(--faint); }
+.footer { text-align: center; padding: 16px; font-size: 0.65rem; color: var(--faint); }
+.info-banner { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 10px; padding: 10px 15px; font-size: 0.78rem; color: rgb(253, 230, 138); margin-bottom: 14px; display: none; }
+.month-sel-bar { background: linear-gradient(90deg, rgb(6, 13, 31), rgb(11, 29, 66)); padding: 10px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 46px; }
+.month-sel-label { font-size: 0.54rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: rgb(61, 82, 104); margin-right: 6px; white-space: nowrap; }
+.mpill { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(110, 143, 173); border-radius: 20px; padding: 4px 15px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.18s; white-space: nowrap; }
+.mpill:hover { background: rgba(255, 255, 255, 0.14); color: rgb(200, 216, 232); border-color: rgba(255, 255, 255, 0.24); }
+.mpill.active { background: var(--blue); border-color: var(--blue); color: rgb(255, 255, 255); box-shadow: rgba(29, 78, 216, 0.5) 0px 0px 14px; }
+.mpill.all-m.active { background: var(--purple); border-color: var(--purple); box-shadow: rgba(124, 58, 237, 0.52) 0px 0px 14px; }
+.global-month-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; position: sticky; top: 58px; z-index: 90; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; }
+.global-month-bar .gm-label { font-size: 0.53rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: var(--faint); white-space: nowrap; }
+.gmpill { background: var(--surface2); border: 1.5px solid var(--border); color: var(--muted); border-radius: 20px; padding: 4px 14px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.18s; white-space: nowrap; user-select: none; }
+.gmpill:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.gmpill.active { background: var(--blue); border-color: var(--blue); color: rgb(255, 255, 255); box-shadow: rgba(59, 130, 246, 0.35) 0px 2px 10px; }
+.gmpill.all-m.active { background: var(--purple); border-color: var(--purple); box-shadow: rgba(167, 139, 250, 0.35) 0px 2px 10px; }
+.gmpill.add-pill { background: transparent; border: 1.5px dashed rgba(255, 255, 255, 0.15); color: var(--faint); padding: 4px 12px; font-size: 0.68rem; }
+.gmpill.add-pill:hover { border-color: var(--blue); color: var(--blue); background: rgba(59, 130, 246, 0.08); }
+#addMonthModal { display: none; position: fixed; inset: 0px; z-index: 9999; background: rgba(6, 13, 31, 0.72); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+#addMonthModal.open { display: flex; }
+.addm-box { background: var(--surface); border-radius: 18px; padding: 28px 28px 24px; width: min(460px, 94vw); box-shadow: rgba(0, 0, 0, 0.6) 0px 20px 60px; animation: 0.22s ease 0s 1 normal none running fadeUp; border: 1px solid var(--border); }
+.addm-title { font-size: 0.92rem; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+.addm-sub { font-size: 0.68rem; color: var(--muted); margin-bottom: 18px; }
+.addm-drop { border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 22px 18px; text-align: center; cursor: pointer; transition: 0.18s; margin-bottom: 16px; background: var(--surface2); position: relative; }
+.addm-drop:hover, .addm-drop.drag-over { border-color: var(--blue); background: rgba(59, 130, 246, 0.08); }
+.addm-drop input[type="file"] { position: absolute; inset: 0px; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.addm-drop-icon { font-size: 1.4rem; margin-bottom: 4px; pointer-events: none; }
+.addm-drop-text { font-size: 0.72rem; color: var(--muted); font-weight: 600; pointer-events: none; }
+.addm-drop-text span { color: var(--blue); font-weight: 700; }
+.addm-file-sel { font-size: 0.68rem; color: var(--green); font-weight: 700; margin-top: 6px; display: none; }
+.addm-date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.addm-field label { display: block; font-size: 0.54rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--faint); margin-bottom: 5px; }
+.addm-field input[type="date"] { width: 100%; padding: 8px 11px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.74rem; color: var(--text); background: var(--surface2); outline: none; box-sizing: border-box; transition: border-color 0.18s; }
+.addm-field input[type="date"]:focus { border-color: var(--blue); }
+.addm-name-row { margin-bottom: 16px; }
+.addm-name-row label { display: block; font-size: 0.54rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--faint); margin-bottom: 5px; }
+.addm-name-row input[type="text"] { width: 100%; padding: 8px 11px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.74rem; color: var(--text); background: var(--surface2); outline: none; box-sizing: border-box; transition: border-color 0.18s; }
+.addm-name-row input[type="text"]:focus { border-color: var(--blue); }
+.addm-footer { display: flex; gap: 9px; justify-content: flex-end; }
+.btn-addm-submit { background: var(--blue); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 9px; padding: 9px 22px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: opacity 0.18s; }
+.btn-addm-submit:hover { opacity: 0.88; }
+.btn-addm-submit:disabled { opacity: 0.4; cursor: default; }
+.btn-addm-cancel { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); border-radius: 9px; padding: 9px 18px; font-size: 0.74rem; font-weight: 700; cursor: pointer; }
+.btn-addm-cancel:hover { background: rgba(255, 255, 255, 0.1); }
+.kpi-bi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; margin-bottom: 14px; }
+.kpi-bi { background: var(--surface); border-radius: 12px; padding: 11px 13px 10px; box-shadow: var(--shadow); border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-left-color: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-top: 3px solid; transition: transform 0.18s, box-shadow 0.18s; }
+.kpi-bi:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.kpi-bi-icon { font-size: 1rem; margin-bottom: 3px; }
+.kpi-bi-label { font-size: 0.54rem; text-transform: uppercase; letter-spacing: 1px; color: var(--faint); font-weight: 800; margin-bottom: 2px; }
+.kpi-bi-value { font-size: 1.55rem; font-weight: 900; line-height: 1.1; }
+.kpi-bi-delta { display: inline-flex; align-items: center; gap: 2px; padding: 1px 7px; border-radius: 10px; font-size: 0.57rem; font-weight: 700; margin-top: 3px; }
+.d-up { background: rgba(52, 211, 153, 0.18); color: rgb(52, 211, 153); }
+.d-down { background: rgba(248, 113, 113, 0.18); color: rgb(248, 113, 113); }
+.d-eq { background: rgba(255, 255, 255, 0.07); color: var(--faint); }
+.kpi-bi-sub { font-size: 0.57rem; color: var(--faint); margin-top: 1px; }
+.month-detail-banner { background: linear-gradient(135deg, rgb(6, 13, 31), rgb(11, 29, 66), rgb(24, 16, 74)); border-radius: 14px; padding: 15px 22px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; box-shadow: rgba(0, 0, 0, 0.22) 0px 6px 24px; border: 1px solid rgba(255, 255, 255, 0.05); }
+.month-detail-banner h2 { font-size: 1rem; font-weight: 900; color: rgb(255, 255, 255); }
+.month-detail-banner span { font-size: 0.7rem; color: rgb(110, 143, 173); }
+@media (max-width: 1200px) {
+  .kpi-grid, .insights-grid, .kpi-bi-grid { grid-template-columns: repeat(3, 1fr); }
+  .kpi-grid-5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .kpi-grid, .kpi-grid-5, .kpi-bi-grid { grid-template-columns: repeat(2, 1fr); }
+  .insights-grid { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 16px 16px 40px; }
+}
+@media (max-width: 500px) {
+  .kpi-grid, .kpi-grid-5, .kpi-bi-grid { grid-template-columns: 1fr 1fr; }
+  .upload-box { padding: 36px 26px; }
+  .header { padding: 14px 16px; }
+}</style></head><body><div id="dashboardScreen" style="display: block;">
+  <header class="header">
+    <div>
+      <div class="header-title">📊 <span id="hTitle">Jul-26</span></div>
+      <div class="header-sub" id="hSub">Period: 06 Jun 2026 → 09 Jul 2026 · All Locations</div>
+    </div>
+    <div class="header-right">
+      <div class="header-right-btns">
+        
+        
+        
+      </div>
+      <div class="header-badge" id="hBadge">📅 Snapshot: 09 Jul 2026</div>
+      <div class="header-attrition" id="hAttrition">⚠️ Overall Attrition: 7.94%</div>
+    </div>
+  </header>
+
+  <!-- GLOBAL MONTH SELECTOR BAR -->
+  <div class="global-month-bar" id="globalMonthBar" style="">
+    <span class="gm-label">📅 Month</span>
+    <div id="globalMonthPills" style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;flex:1;"><span class="gmpill all-m" onclick="selectUploadedMonth(-1)">All Months</span><span class="gmpill" onclick="selectUploadedMonth(0)">Apr-26</span><span class="gmpill" onclick="selectUploadedMonth(1)">May-26</span><span class="gmpill" onclick="selectUploadedMonth(2)">Jun-26</span><span class="gmpill active" onclick="selectUploadedMonth(3)">Jul-26</span><span class="gmpill add-pill" onclick="openAddMonthModal()">➕ Add Month</span></div>
+  </div>
+
+  <!-- TAB NAVIGATION -->
+  <nav class="tab-nav">
+    <button class="tab-btn" onclick="switchTab('trends')" id="tab-trends" style="display: none;">📈 Trends</button>
+    <button class="tab-btn active" onclick="switchTab('overview')" id="tab-overview">📋 Overview</button>
+    <button class="tab-btn" onclick="switchTab('onroll')" id="tab-onroll">🟣 Onroll</button>
+    <button class="tab-btn" onclick="switchTab('support')" id="tab-support">🔵 Support</button>
+    <button class="tab-btn" onclick="switchTab('register')" id="tab-register">📑 Detail Register</button>
+  </nav>
+
+  <!-- ══ TAB: TRENDS ══ -->
+  <div id="panel-trends" class="tab-panel">
+    <!-- Month Selector Bar -->
+    <div class="month-sel-bar">
+      <span class="month-sel-label">📅 Month Filter</span>
+      <div id="monthSelector" style="display:flex;flex-wrap:wrap;gap:7px;"><button class="mpill all-m active" onclick="selectTrendMonth(-1)">📊 All Months</button><button class="mpill " onclick="selectTrendMonth(0)">Apr-26</button><button class="mpill " onclick="selectTrendMonth(1)">May-26</button><button class="mpill " onclick="selectTrendMonth(2)">Jun-26</button><button class="mpill " onclick="selectTrendMonth(3)">Jul-26</button></div>
+    </div>
+
+    <div class="container">
+
+      <!-- ── ALL MONTHS VIEW ── -->
+      <div id="trendAllCharts">
+        <div class="total-strip" id="trendStrip" style="margin-top:4px;">
+    <span class="strip-label">Apr-26 → Jul-26</span>
+    <div class="strip-items">
+      <div class="strip-item">
+    <div class="strip-item-label">Months</div>
+    <div class="strip-item-val" style="color:#93c5fd">4</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Peak HC</div>
+    <div class="strip-item-val" style="color:#6ee7b7">235</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Latest HC</div>
+    <div class="strip-item-val" style="color:#c4b5fd">201</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">YTD Joiners</div>
+    <div class="strip-item-val" style="color:#86efac">12</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">YTD Exits</div>
+    <div class="strip-item-val" style="color:#fca5a5">78</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Avg Attrition</div>
+    <div class="strip-item-val" style="color:#fcd34d">8.37%</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Net Growth</div>
+    <div class="strip-item-val" style="color:#f87171">-57</div>
+  </div>
+    </div></div>
+        <div class="section-heading" style="margin-top:10px;">💡 Multi-Month Insights</div>
+        <div class="insights-grid" id="trendInsights">
+    <div class="insight-card" style="border-left-color:#dc2626">
+      <div class="insight-icon">👥</div>
+      <div class="insight-title">Overall Trend</div>
+      <div class="insight-value" style="color:#dc2626">📉 Declining</div>
+      <div class="insight-desc">Apr-26: 258 → Jul-26: 201 | Net -57</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#0e4d8b">
+      <div class="insight-icon">🏆</div>
+      <div class="insight-title">Peak HC</div>
+      <div class="insight-value" style="color:#0e4d8b">235</div>
+      <div class="insight-desc">Recorded in Apr-26</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#dc2626">
+      <div class="insight-icon">📉</div>
+      <div class="insight-title">Highest Attrition</div>
+      <div class="insight-value" style="color:#dc2626">10.85%</div>
+      <div class="insight-desc">In Apr-26 — 28 exits</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#16a34a">
+      <div class="insight-icon">🎉</div>
+      <div class="insight-title">Best Hiring Month</div>
+      <div class="insight-value" style="color:#16a34a">5</div>
+      <div class="insight-desc">Apr-26 — 5 joiners</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#d97706">
+      <div class="insight-icon">⚡</div>
+      <div class="insight-title">Avg Attrition</div>
+      <div class="insight-value" style="color:#d97706">8.37%</div>
+      <div class="insight-desc">Across 4 months</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#7c3aed">
+      <div class="insight-icon">📊</div>
+      <div class="insight-title">Growth Streak</div>
+      <div class="insight-value" style="color:#7c3aed">None</div>
+      <div class="insight-desc">Consecutive months of HC growth</div>
+    </div></div>
+        <div class="section-heading">📈 Trend Charts</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>Total HC — Month over Month</div>
+            <canvas id="chartHCTrend" style=""></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#ef4444;"></span>Attrition Trend (%)</div>
+            <canvas id="chartAttTrend" style=""></canvas>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#22c55e;"></span>New Joiners vs Exits</div>
+            <canvas id="chartJoinExitTrend" style=""></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#8b5cf6;"></span>Onroll vs Support HC</div>
+            <canvas id="chartTypesTrend" style=""></canvas>
+          </div>
+        </div>
+        <div class="section-heading">Month-wise Summary</div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#334155;"></span>All Months</div>
+          <div class="table-wrap"><table>
+            <thead><tr>
+              <th>Month</th><th class="r">Opening HC</th><th class="r">Closing HC</th>
+              <th class="r">Onroll</th><th class="r">Support</th>
+              <th class="r">Joiners</th><th class="r">Exits</th>
+              <th class="r">Attrition</th><th class="r">MoM Change</th>
+            </tr></thead>
+            <tbody id="trendTableBody"><tr>
+      <td><button onclick="selectTrendMonth(0)" style="background:none;border:none;color:#1d4ed8;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;font-size:.73rem;">Apr-26</button></td>
+      <td class="r">258</td>
+      <td class="r" style="font-weight:700;">235</td>
+      <td class="r">197</td>
+      <td class="r">38</td>
+      <td class="r">5</td>
+      <td class="r">28</td>
+      <td class="r"><span class="pill pill-red">10.85%</span></td>
+      <td class="r chg-zero">—</td>
+    </tr><tr>
+      <td><button onclick="selectTrendMonth(1)" style="background:none;border:none;color:#1d4ed8;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;font-size:.73rem;">May-26</button></td>
+      <td class="r">229</td>
+      <td class="r" style="font-weight:700;">211</td>
+      <td class="r">180</td>
+      <td class="r">31</td>
+      <td class="r">2</td>
+      <td class="r">20</td>
+      <td class="r"><span class="pill pill-amber">8.73%</span></td>
+      <td class="r chg-neg">24 ↓</td>
+    </tr><tr>
+      <td><button onclick="selectTrendMonth(2)" style="background:none;border:none;color:#1d4ed8;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;font-size:.73rem;">Jun-26</button></td>
+      <td class="r">219</td>
+      <td class="r" style="font-weight:700;">207</td>
+      <td class="r">178</td>
+      <td class="r">29</td>
+      <td class="r">1</td>
+      <td class="r">13</td>
+      <td class="r"><span class="pill pill-amber">5.94%</span></td>
+      <td class="r chg-neg">4 ↓</td>
+    </tr><tr>
+      <td><button onclick="selectTrendMonth(3)" style="background:none;border:none;color:#1d4ed8;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;font-size:.73rem;">Jul-26</button></td>
+      <td class="r">214</td>
+      <td class="r" style="font-weight:700;">201</td>
+      <td class="r">173</td>
+      <td class="r">28</td>
+      <td class="r">4</td>
+      <td class="r">17</td>
+      <td class="r"><span class="pill pill-amber">7.94%</span></td>
+      <td class="r chg-neg">6 ↓</td>
+    </tr><tr class="total-row">
+    <td>Grand Total</td><td class="r">258</td><td class="r">201</td>
+    <td class="r">173</td><td class="r">28</td>
+    <td class="r">12</td><td class="r">78</td>
+    <td class="r">8.37%</td>
+    <td class="r" style="color:#f87171">57 ↓</td>
+  </tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ── SINGLE MONTH DETAIL VIEW ── -->
+      <div id="trendMonthDetail" style="display:none;">
+        <div class="month-detail-banner" id="monthDetailBanner">
+          <h2 id="monthDetailHeader">Month Detail</h2>
+          <span id="monthDetailSub"></span>
+        </div>
+        <div id="monthDetailKPIs"></div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
+            <canvas id="chartMonthTeam" style=""></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
+            <canvas id="chartMonthVsPrev" style=""></canvas>
+          </div>
+        </div>
+        <div class="section-heading">Department Register</div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#334155;"></span>Department-wise Breakdown</div>
+          <div class="table-wrap"><table>
+            <thead><tr>
+              <th>Type</th><th>Department</th>
+              <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
+            </tr></thead>
+            <tbody id="monthDetailRegisterBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TAB: OVERVIEW ══ -->
+  <div id="panel-overview" class="tab-panel active">
+    <div class="container">
+      <div class="info-banner" id="infoBanner" style="display: none;"></div>
+      <div class="total-strip" id="totalStrip">
+    <span class="strip-label">Grand Total</span>
+    <div class="strip-items">
+      <div class="strip-item">
+    <div class="strip-item-label">Jun-26</div>
+    <div class="strip-item-val" style="color:#93c5fd">214</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Jul-26</div>
+    <div class="strip-item-val" style="color:#6ee7b7">201</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Onroll</div>
+    <div class="strip-item-val" style="color:#c4b5fd">173</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Support</div>
+    <div class="strip-item-val" style="color:#7dd3fc">28</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">New Joiners</div>
+    <div class="strip-item-val" style="color:#86efac">4</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Total Exits</div>
+    <div class="strip-item-val" style="color:#fca5a5">17</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Attrition</div>
+    <div class="strip-item-val" style="color:#fcd34d">7.94%</div>
+  </div>
+      <div class="strip-item">
+    <div class="strip-item-label">Net Change</div>
+    <div class="strip-item-val" style="color:#f87171">-13</div>
+  </div>
+    </div></div>
+
+      <div class="section-heading" style="margin-top:4px;">🟣 Onroll</div>
+      <div class="kpi-grid" id="kpiOnroll"><div class="kpi c-teal">
+    <div class="kpi-icon">✅</div>
+    <div class="kpi-label">Jul-26</div>
+    <div class="kpi-value" style="">173</div>
+    <div class="kpi-sub">End of period</div>
+  </div><div class="kpi c-green">
+    <div class="kpi-icon">🎉</div>
+    <div class="kpi-label">New Joiners</div>
+    <div class="kpi-value" style="">2</div>
+    <div class="kpi-sub">Added this period</div>
+  </div><div class="kpi c-amber">
+    <div class="kpi-icon">📋</div>
+    <div class="kpi-label">On Notice</div>
+    <div class="kpi-value" style="">4</div>
+    <div class="kpi-sub">Serving notice period</div>
+  </div><div class="kpi c-red">
+    <div class="kpi-icon">🚪</div>
+    <div class="kpi-label">Inactive</div>
+    <div class="kpi-value" style="">10</div>
+    <div class="kpi-sub">Vol. 11 · Co. 3</div>
+  </div><div class="kpi c-purple">
+    <div class="kpi-icon">📉</div>
+    <div class="kpi-label">Attrition</div>
+    <div class="kpi-value" style="">7.57%</div>
+    <div class="kpi-sub">Avg HC: 179</div>
+  </div><div class="kpi c-blue">
+    <div class="kpi-icon">🔢</div>
+    <div class="kpi-label">Net Change</div>
+    <div class="kpi-value" style="color:#dc2626;">-12</div>
+    <div class="kpi-sub">Prev: 185</div>
+  </div></div>
+
+      <div class="section-heading">🔵 Support (Offroll + Consultant + Intern)</div>
+      <div class="kpi-grid" id="kpiSupport"><div class="kpi c-teal">
+    <div class="kpi-icon">✅</div>
+    <div class="kpi-label">Jul-26</div>
+    <div class="kpi-value" style="">28</div>
+    <div class="kpi-sub">End of period</div>
+  </div><div class="kpi c-green">
+    <div class="kpi-icon">🎉</div>
+    <div class="kpi-label">New Joiners</div>
+    <div class="kpi-value" style="">2</div>
+    <div class="kpi-sub">Added this period</div>
+  </div><div class="kpi c-amber">
+    <div class="kpi-icon">📋</div>
+    <div class="kpi-label">On Notice</div>
+    <div class="kpi-value" style="">0</div>
+    <div class="kpi-sub">Serving notice period</div>
+  </div><div class="kpi c-red">
+    <div class="kpi-icon">🚪</div>
+    <div class="kpi-label">Inactive</div>
+    <div class="kpi-value" style="">3</div>
+    <div class="kpi-sub">Vol. 3 · Co. 0</div>
+  </div><div class="kpi c-indigo">
+    <div class="kpi-icon">📉</div>
+    <div class="kpi-label">Attrition</div>
+    <div class="kpi-value" style="">10.34%</div>
+    <div class="kpi-sub">Avg HC: 29</div>
+  </div><div class="kpi c-blue">
+    <div class="kpi-icon">🔢</div>
+    <div class="kpi-label">Net Change</div>
+    <div class="kpi-value" style="color:#dc2626;">-1</div>
+    <div class="kpi-sub">Prev: 29</div>
+  </div></div>
+
+      <div class="section-heading">💡 Key Insights</div>
+      <div class="insights-grid" id="insightsSection">
+    <div class="insight-card" style="border-left-color:#dc2626">
+      <div class="insight-icon">👥</div>
+      <div class="insight-title">Workforce Trend</div>
+      <div class="insight-value" style="color:#dc2626">📉 Shrinking</div>
+      <div class="insight-desc">Total: 214 → 201 &nbsp;|&nbsp; Net -13</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#6d28d9">
+      <div class="insight-icon">🟣</div>
+      <div class="insight-title">Onroll Strength</div>
+      <div class="insight-value" style="color:#6d28d9">173 &nbsp;<span style="font-size:.75rem;font-weight:600">(86%)</span></div>
+      <div class="insight-desc">2 joined &nbsp;·&nbsp; 14 exited</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#0369a1">
+      <div class="insight-icon">🔵</div>
+      <div class="insight-title">Support Strength</div>
+      <div class="insight-value" style="color:#0369a1">28 &nbsp;<span style="font-size:.75rem;font-weight:600">(14%)</span></div>
+      <div class="insight-desc">Offroll + Consultant + Intern</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#d97706">
+      <div class="insight-icon">📉</div>
+      <div class="insight-title">Attrition Rate</div>
+      <div class="insight-value" style="color:#d97706">7.94%</div>
+      <div class="insight-desc">🟡 Moderate &nbsp;·&nbsp; 17 exits this period</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#0e4d8b">
+      <div class="insight-icon">🏆</div>
+      <div class="insight-title">Largest Department</div>
+      <div class="insight-value" style="color:#0e4d8b">Customer Experience</div>
+      <div class="insight-desc">42 employees</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#15803d">
+      <div class="insight-icon">🎉</div>
+      <div class="insight-title">New Joiners</div>
+      <div class="insight-value" style="color:#15803d">4</div>
+      <div class="insight-desc">Most exits: Technology (8)</div>
+    </div></div>
+
+      <div class="section-heading">Distribution</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#f59e0b;"></span>HC by Employee Type</div>
+          <canvas id="chartEmpType" style=""></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#ef4444;"></span>Exit Type Breakdown</div>
+          <canvas id="chartExitType" style=""></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#10b981;"></span>Total HC by Location</div>
+          <canvas id="chartLocationOv" style=""></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: ONROLL ══ -->
+  <div id="panel-onroll" class="tab-panel">
+    <div class="container">
+      <div class="section-heading" style="margin-top:4px;">🟣 Onroll Headcount</div>
+      <div class="kpi-grid" id="kpiOnrollDetail"><div class="kpi c-teal">
+    <div class="kpi-icon">✅</div>
+    <div class="kpi-label">Jul-26</div>
+    <div class="kpi-value" style="">173</div>
+    <div class="kpi-sub">End of period</div>
+  </div><div class="kpi c-green">
+    <div class="kpi-icon">🎉</div>
+    <div class="kpi-label">New Joiners</div>
+    <div class="kpi-value" style="">2</div>
+    <div class="kpi-sub">Added this period</div>
+  </div><div class="kpi c-amber">
+    <div class="kpi-icon">📋</div>
+    <div class="kpi-label">On Notice</div>
+    <div class="kpi-value" style="">4</div>
+    <div class="kpi-sub">Serving notice period</div>
+  </div><div class="kpi c-red">
+    <div class="kpi-icon">🚪</div>
+    <div class="kpi-label">Inactive</div>
+    <div class="kpi-value" style="">10</div>
+    <div class="kpi-sub">Vol. 11 · Co. 3</div>
+  </div><div class="kpi c-purple">
+    <div class="kpi-icon">📉</div>
+    <div class="kpi-label">Attrition</div>
+    <div class="kpi-value" style="">7.57%</div>
+    <div class="kpi-sub">Avg HC: 179</div>
+  </div><div class="kpi c-blue">
+    <div class="kpi-icon">🔢</div>
+    <div class="kpi-label">Net Change</div>
+    <div class="kpi-value" style="color:#dc2626;">-12</div>
+    <div class="kpi-sub">Prev: 185</div>
+  </div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#6366f1;"></span>Onroll — by Location</div>
+          <canvas id="chartOnrollLoc" style=""></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#8b5cf6;"></span>Onroll — by Team</div>
+          <canvas id="chartOnrollTeam" style=""></canvas>
+        </div>
+      </div>
+      <div class="section-heading">Onroll Register</div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#6366f1;"></span>Onroll Detail</div>
+        <div class="table-wrap"><table>
+          <thead><tr>
+            <th>Type</th><th>Location</th><th>Team</th>
+            <th class="r" id="thOpenOnroll">Jun-26</th><th class="r">New Joiners</th>
+            <th class="r">Total Exits</th><th class="r">Voluntary</th>
+            <th class="r">Co. Initiated</th><th class="r" id="thCloseOnroll">Jul-26</th>
+            <th class="r">Avg HC</th><th class="r">Attrition</th><th class="r">Net Change</th>
+          </tr></thead>
+          <tbody id="tableBodyOnroll"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Technology</td>
+      <td class="r" style="font-weight:600;">37</td>
+      <td class="r">2</td>
+      <td class="r">6</td>
+      <td class="r">5</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:600;">33</td>
+      <td class="r">35</td>
+      <td class="r"><span class="pill pill-amber">16.22%</span></td>
+      <td class="r chg-neg">-4</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Customer Experience</td>
+      <td class="r" style="font-weight:600;">25</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">25</td>
+      <td class="r">25</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Execution Team</td>
+      <td class="r" style="font-weight:600;">21</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:600;">20</td>
+      <td class="r">20.5</td>
+      <td class="r"><span class="pill pill-green">4.76%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Supply</td>
+      <td class="r" style="font-weight:600;">12</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">11</td>
+      <td class="r">11.5</td>
+      <td class="r"><span class="pill pill-green">8.33%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Product</td>
+      <td class="r" style="font-weight:600;">13</td>
+      <td class="r">—</td>
+      <td class="r">2</td>
+      <td class="r">2</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">11</td>
+      <td class="r">12</td>
+      <td class="r"><span class="pill pill-amber">15.38%</span></td>
+      <td class="r chg-neg">-2</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Finance</td>
+      <td class="r" style="font-weight:600;">10</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">10</td>
+      <td class="r">10</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Bharat</span></td>
+      <td>Execution Team</td>
+      <td class="r" style="font-weight:600;">9</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">9</td>
+      <td class="r">9</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Solution Design</td>
+      <td class="r" style="font-weight:600;">9</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">8</td>
+      <td class="r">8.5</td>
+      <td class="r"><span class="pill pill-amber">11.11%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>HR &amp; Admin</td>
+      <td class="r" style="font-weight:600;">6</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">6</td>
+      <td class="r">6</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Analytics</td>
+      <td class="r" style="font-weight:600;">6</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">6</td>
+      <td class="r">6</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Tech For Future</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">5</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Marketing</td>
+      <td class="r" style="font-weight:600;">6</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">5.5</td>
+      <td class="r"><span class="pill pill-amber">16.67%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Founders Office</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">5</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Mumbai</span></td>
+      <td>Execution Team</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">4</td>
+      <td class="r">4.5</td>
+      <td class="r"><span class="pill pill-amber">20.00%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Learning and Development</td>
+      <td class="r" style="font-weight:600;">4</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">4</td>
+      <td class="r">4</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Communications</td>
+      <td class="r" style="font-weight:600;">3</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">3</td>
+      <td class="r">3</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Mumbai</span></td>
+      <td>Supply</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Business</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Labs</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>User Insights</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td><span class="tag-loc">Mumbai</span></td>
+      <td>Learning and Development</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">0</td>
+      <td class="r">0.5</td>
+      <td class="r"><span class="pill pill-red">100.00%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr class="total-row">
+    <td colspan="3">Grand Total</td>
+    <td class="r">185</td>
+    <td class="r">2</td>
+    <td class="r">14</td>
+    <td class="r">11</td>
+    <td class="r">3</td>
+    <td class="r">173</td>
+    <td class="r">179</td>
+    <td class="r"><span class="pill pill-green">7.57%</span></td>
+    <td class="r" style="color:#ef4444">-12</td>
+  </tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: SUPPORT ══ -->
+  <div id="panel-support" class="tab-panel">
+    <div class="container">
+      <div class="section-heading" style="margin-top:4px;">🔵 Support Headcount (Offroll + Consultant + Intern)</div>
+      <div class="kpi-grid" id="kpiSupportDetail"><div class="kpi c-teal">
+    <div class="kpi-icon">✅</div>
+    <div class="kpi-label">Jul-26</div>
+    <div class="kpi-value" style="">28</div>
+    <div class="kpi-sub">End of period</div>
+  </div><div class="kpi c-green">
+    <div class="kpi-icon">🎉</div>
+    <div class="kpi-label">New Joiners</div>
+    <div class="kpi-value" style="">2</div>
+    <div class="kpi-sub">Added this period</div>
+  </div><div class="kpi c-amber">
+    <div class="kpi-icon">📋</div>
+    <div class="kpi-label">On Notice</div>
+    <div class="kpi-value" style="">0</div>
+    <div class="kpi-sub">Serving notice period</div>
+  </div><div class="kpi c-red">
+    <div class="kpi-icon">🚪</div>
+    <div class="kpi-label">Inactive</div>
+    <div class="kpi-value" style="">3</div>
+    <div class="kpi-sub">Vol. 3 · Co. 0</div>
+  </div><div class="kpi c-indigo">
+    <div class="kpi-icon">📉</div>
+    <div class="kpi-label">Attrition</div>
+    <div class="kpi-value" style="">10.34%</div>
+    <div class="kpi-sub">Avg HC: 29</div>
+  </div><div class="kpi c-blue">
+    <div class="kpi-icon">🔢</div>
+    <div class="kpi-label">Net Change</div>
+    <div class="kpi-value" style="color:#dc2626;">-1</div>
+    <div class="kpi-sub">Prev: 29</div>
+  </div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#0ea5e9;"></span>Support — by Team</div>
+          <canvas id="chartSupportTeam" style=""></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-dot" style="background:#14b8a6;"></span>Support — by Location</div>
+          <canvas id="chartSupportLoc" style=""></canvas>
+        </div>
+      </div>
+      <div class="section-heading">Support Register</div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#0ea5e9;"></span>Support Detail (Offroll + Consultant + Intern)</div>
+        <div class="table-wrap"><table>
+          <thead><tr>
+            <th>Type</th><th>Location</th><th>Team</th>
+            <th class="r" id="thOpenSupport">Jun-26</th><th class="r">New Joiners</th>
+            <th class="r">Total Exits</th><th class="r">Voluntary</th>
+            <th class="r">Co. Initiated</th><th class="r" id="thCloseSupport">Jul-26</th>
+            <th class="r">Avg HC</th><th class="r">Attrition</th><th class="r">Net Change</th>
+          </tr></thead>
+          <tbody id="tableBodySupport"><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Customer Experience</td>
+      <td class="r" style="font-weight:600;">15</td>
+      <td class="r">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">17</td>
+      <td class="r">16</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-pos">+2</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Supply</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">5</td>
+      <td class="r">5</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Execution Team</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td><span class="tag-loc">Mumbai</span></td>
+      <td>Supply</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">2</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>User Insights</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">1</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr>
+      <td><span class="badge b-consultant">Consultant</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Technology</td>
+      <td class="r" style="font-weight:600;">2</td>
+      <td class="r">—</td>
+      <td class="r">2</td>
+      <td class="r">2</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">0</td>
+      <td class="r">1</td>
+      <td class="r"><span class="pill pill-red">100.00%</span></td>
+      <td class="r chg-neg">-2</td>
+    </tr><tr>
+      <td><span class="badge b-consultant">Consultant</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Business</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">—</td>
+      <td class="r">1</td>
+      <td class="r">1</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">0</td>
+      <td class="r">0.5</td>
+      <td class="r"><span class="pill pill-red">100.00%</span></td>
+      <td class="r chg-neg">-1</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td><span class="tag-loc">Delhi/NCR</span></td>
+      <td>Finance</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r">—</td>
+      <td class="r" style="font-weight:600;">1</td>
+      <td class="r">1</td>
+      <td class="r"><span class="pill pill-zero">—</span></td>
+      <td class="r chg-zero">0</td>
+    </tr><tr class="total-row">
+    <td colspan="3">Grand Total</td>
+    <td class="r">29</td>
+    <td class="r">2</td>
+    <td class="r">3</td>
+    <td class="r">3</td>
+    <td class="r">—</td>
+    <td class="r">28</td>
+    <td class="r">28.5</td>
+    <td class="r"><span class="pill pill-amber">10.34%</span></td>
+    <td class="r" style="color:#ef4444">-1</td>
+  </tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: DETAIL REGISTER ══ -->
+  <div id="panel-register" class="tab-panel">
+    <div class="container">
+      <div class="section-heading" style="margin-top:4px;">Department-wise Headcount Summary</div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-dot" style="background:#334155;"></span>Department Register</div>
+        <div class="table-wrap"><table>
+          <thead><tr>
+            <th>Type</th>
+            <th>Department</th>
+            <th class="r" id="thOpen">Jun-26</th>
+            <th class="r" id="thClose">Jul-26</th>
+            <th class="r">Delta</th>
+          </tr></thead>
+          <tbody id="tableBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">37</td>
+      <td class="r" style="font-weight:700;">33</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">35</td>
+      <td class="r" style="font-weight:700;">33</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">14</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">10</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">9</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Tech For Future</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">15</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">2 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">7</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-consultant">Consultant</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">0</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-consultant">Consultant</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">0</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">214</td>
+    <td class="r">201</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">13 ↓</td>
+  </tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" id="footerText">Headcount Dashboard · Jul-26 · 06 Jun 2026 → 09 Jul 2026</div>
+</div><div style="text-align:center;padding:12px;font-size:.7rem;color:#94a3b8;">Saved on 09 Jul 2026</div>
+<script>
+Chart.register(ChartDataLabels);
+function switchTab(name){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');document.getElementById('panel-'+name).classList.add('active');}
+function selectTrendMonth(){alert('Open the original file to use month filtering.');}
+const _cfgs={"chartEmpType":{"type":"doughnut","data":{"labels":["Onroll","Offroll","Consultant","Intern"],"datasets":[{"data":[173,27,0,1],"backgroundColor":["#6366f1","#0ea5e9","#f59e0b","#22c55e"],"borderWidth":2,"borderColor":"#fff"}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"display":true,"color":"#fff","font":{"weight":"bold","size":11}}},"scales":{}}},"chartExitType":{"type":"pie","data":{"labels":["Voluntary","Co. Initiated"],"datasets":[{"data":[14,3],"backgroundColor":["#f59e0b","#ef4444"],"borderWidth":2,"borderColor":"#fff"}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"display":true,"color":"#fff","font":{"weight":"bold","size":11}}},"scales":{}}},"chartLocationOv":{"type":"bar","data":{"labels":["Delhi/NCR","Bharat","Mumbai"],"datasets":[{"label":"Jun-26","data":[195,9,10],"backgroundColor":"#93c5fd","borderRadius":5},{"label":"Jul-26","data":[184,9,8],"backgroundColor":"#1d4ed8","borderRadius":5}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"color":"#fff","font":{"weight":"700","size":10},"anchor":"end","align":"top","offset":2}},"scales":{"x":{"axis":"x","grid":{"display":false,"offset":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"color":"rgba(0,0,0,0.1)"},"ticks":{"font":{"size":9},"maxRotation":35,"minRotation":0,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"type":"category","offset":true,"display":true,"reverse":false,"beginAtZero":false,"bounds":"ticks","clip":true,"grace":0,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"x","position":"bottom"},"y":{"axis":"y","grid":{"color":"rgba(255,255,255,.07)","display":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"offset":false},"beginAtZero":true,"ticks":{"font":{"size":9},"minRotation":0,"maxRotation":50,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"grace":"20%","type":"linear","display":true,"offset":false,"reverse":false,"bounds":"ticks","clip":true,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"y","position":"left"}}}},"chartOnrollLoc":{"type":"bar","data":{"labels":["Delhi/NCR","Bharat","Mumbai"],"datasets":[{"label":"Jun-26","data":[168,9,8],"backgroundColor":"#a5b4fc","borderRadius":5},{"label":"Jul-26","data":[158,9,6],"backgroundColor":"#4338ca","borderRadius":5}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"color":"#fff","font":{"weight":"700","size":10},"anchor":"end","align":"top","offset":2}},"scales":{"x":{"axis":"x","grid":{"display":false,"offset":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"color":"rgba(0,0,0,0.1)"},"ticks":{"font":{"size":9},"maxRotation":35,"minRotation":0,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"type":"category","offset":true,"display":true,"reverse":false,"beginAtZero":false,"bounds":"ticks","clip":true,"grace":0,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"x","position":"bottom"},"y":{"axis":"y","grid":{"color":"rgba(255,255,255,.07)","display":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"offset":false},"beginAtZero":true,"ticks":{"font":{"size":9},"minRotation":0,"maxRotation":50,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"grace":"20%","type":"linear","display":true,"offset":false,"reverse":false,"bounds":"ticks","clip":true,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"y","position":"left"}}}},"chartOnrollTeam":{"type":"bar","data":{"labels":["Technology","Execution Team","Customer Experience","Supply","Product","Finance","Solution Design","HR & Admin","Analytics","Tech For Future","Marketing","Founders Office","Learning and Development","Communications","Business","Labs","User Insights"],"datasets":[{"label":"Jun-26","data":[37,35,25,14,13,10,9,6,6,5,6,5,5,3,2,2,2],"backgroundColor":"#c4b5fd","borderRadius":5},{"label":"Jul-26","data":[33,33,25,13,11,10,8,6,6,5,5,5,4,3,2,2,2],"backgroundColor":"#6d28d9","borderRadius":5}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"color":"#fff","font":{"weight":"700","size":10},"anchor":"end","align":"top","offset":2}},"scales":{"x":{"axis":"x","grid":{"display":false,"offset":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"color":"rgba(0,0,0,0.1)"},"ticks":{"font":{"size":9},"maxRotation":35,"minRotation":0,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"type":"category","offset":true,"display":true,"reverse":false,"beginAtZero":false,"bounds":"ticks","clip":true,"grace":0,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"x","position":"bottom"},"y":{"axis":"y","grid":{"color":"rgba(255,255,255,.07)","display":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"offset":false},"beginAtZero":true,"ticks":{"font":{"size":9},"minRotation":0,"maxRotation":50,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"grace":"20%","type":"linear","display":true,"offset":false,"reverse":false,"bounds":"ticks","clip":true,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"y","position":"left"}}}},"chartSupportTeam":{"type":"bar","data":{"labels":["Customer Experience","Supply","Execution Team","User Insights","Finance","Technology","Business"],"datasets":[{"label":"Jun-26","data":[15,7,2,1,1,2,1],"backgroundColor":"#7dd3fc","borderRadius":5},{"label":"Jul-26","data":[17,7,2,1,1,0,0],"backgroundColor":"#0369a1","borderRadius":5}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"color":"#fff","font":{"weight":"700","size":10},"anchor":"end","align":"top","offset":2}},"scales":{"x":{"axis":"x","grid":{"display":false,"offset":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"color":"rgba(0,0,0,0.1)"},"ticks":{"font":{"size":9},"maxRotation":35,"minRotation":0,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"type":"category","offset":true,"display":true,"reverse":false,"beginAtZero":false,"bounds":"ticks","clip":true,"grace":0,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"x","position":"bottom"},"y":{"axis":"y","grid":{"color":"rgba(255,255,255,.07)","display":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"offset":false},"beginAtZero":true,"ticks":{"font":{"size":9},"minRotation":0,"maxRotation":50,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"grace":"20%","type":"linear","display":true,"offset":false,"reverse":false,"bounds":"ticks","clip":true,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"y","position":"left"}}}},"chartSupportLoc":{"type":"bar","data":{"labels":["Delhi/NCR","Mumbai"],"datasets":[{"label":"Jun-26","data":[27,2],"backgroundColor":"#86efac","borderRadius":5},{"label":"Jul-26","data":[26,2],"backgroundColor":"#15803d","borderRadius":5}]},"options":{"responsive":true,"plugins":{"legend":{"position":"bottom","labels":{"padding":10,"boxWidth":10,"font":{"size":10}}},"datalabels":{"color":"#fff","font":{"weight":"700","size":10},"anchor":"end","align":"top","offset":2}},"scales":{"x":{"axis":"x","grid":{"display":false,"offset":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"color":"rgba(0,0,0,0.1)"},"ticks":{"font":{"size":9},"maxRotation":35,"minRotation":0,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"type":"category","offset":true,"display":true,"reverse":false,"beginAtZero":false,"bounds":"ticks","clip":true,"grace":0,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"x","position":"bottom"},"y":{"axis":"y","grid":{"color":"rgba(255,255,255,.07)","display":true,"lineWidth":1,"drawOnChartArea":true,"drawTicks":true,"tickLength":8,"offset":false},"beginAtZero":true,"ticks":{"font":{"size":9},"minRotation":0,"maxRotation":50,"mirror":false,"textStrokeWidth":0,"textStrokeColor":"","padding":3,"display":true,"autoSkip":true,"autoSkipPadding":3,"labelOffset":0,"minor":{},"major":{},"align":"center","crossAlign":"near","showLabelBackdrop":false,"backdropColor":"rgba(255, 255, 255, 0.75)","backdropPadding":2,"color":"#94a3b8"},"grace":"20%","type":"linear","display":true,"offset":false,"reverse":false,"bounds":"ticks","clip":true,"border":{"display":true,"dash":[],"dashOffset":0,"width":1,"color":"rgba(0,0,0,0.1)"},"title":{"display":false,"text":"","padding":{"top":4,"bottom":4},"color":"#94a3b8"},"id":"y","position":"left"}}}}};Object.entries(_cfgs).forEach(([id,cfg])=>{const el=document.getElementById(id);if(el)new Chart(el,cfg);});
+</script></body></html>
