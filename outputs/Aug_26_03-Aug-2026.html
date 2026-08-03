@@ -315,7 +315,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -509,20 +509,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -533,7 +570,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -1982,7 +2150,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -2176,20 +2344,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -2200,7 +2405,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -3649,7 +3985,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -3843,20 +4179,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -3867,7 +4240,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -5306,7 +5810,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -5500,20 +6004,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -5524,7 +6065,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -6937,7 +7609,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -7131,20 +7803,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -7155,7 +7864,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -8544,7 +9384,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -8738,20 +9578,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -8762,7 +9639,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -10147,7 +11155,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -10341,20 +11349,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -10365,7 +11410,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -11735,7 +12911,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -11929,20 +13105,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -11953,7 +13166,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
@@ -13338,7 +14682,7 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
     <div class="container">
 
       <!-- ── ALL MONTHS VIEW ── -->
-      <div id="trendAllCharts">
+      <div id="trendAllCharts" style="">
         <div class="total-strip" id="trendStrip" style="margin-top:4px;">
     <span class="strip-label">Jan-26 → Aug-26</span>
     <div class="strip-items">
@@ -13532,20 +14876,57 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
       </div>
 
       <!-- ── SINGLE MONTH DETAIL VIEW ── -->
-      <div id="trendMonthDetail" style="display:none;">
+      <div id="trendMonthDetail" style="display: none;">
         <div class="month-detail-banner" id="monthDetailBanner">
-          <h2 id="monthDetailHeader">Month Detail</h2>
-          <span id="monthDetailSub"></span>
+          <h2 id="monthDetailHeader">Aug-26 — Month Detail</h2>
+          <span id="monthDetailSub">Comparing vs Jul-26</span>
         </div>
-        <div id="monthDetailKPIs"></div>
+        <div id="monthDetailKPIs"><div class="kpi-bi-grid">
+    <div class="kpi-bi" style="border-top-color:#1d4ed8">
+      <div class="kpi-bi-icon">✅</div>
+      <div class="kpi-bi-label">Total HC</div>
+      <div class="kpi-bi-value" style="color:#1d4ed8">197</div>
+      <div><span class="kpi-bi-delta d-down">↓ 4 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#7c3aed">
+      <div class="kpi-bi-icon">🟣</div>
+      <div class="kpi-bi-label">Onroll HC</div>
+      <div class="kpi-bi-value" style="color:#7c3aed">168</div>
+      <div><span class="kpi-bi-delta d-down">↓ 5 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#0369a1">
+      <div class="kpi-bi-icon">🔵</div>
+      <div class="kpi-bi-label">Offroll HC</div>
+      <div class="kpi-bi-value" style="color:#0369a1">29</div>
+      <div><span class="kpi-bi-delta d-up">↑ 1 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">🎉</div>
+      <div class="kpi-bi-label">New Joiners</div>
+      <div class="kpi-bi-value" style="color:#16a34a">2</div>
+      <div><span class="kpi-bi-delta d-down">↓ 2 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#ef4444">
+      <div class="kpi-bi-icon">🚪</div>
+      <div class="kpi-bi-label">Total Exits</div>
+      <div class="kpi-bi-value" style="color:#ef4444">10</div>
+      <div><span class="kpi-bi-delta d-up">↓ 7 vs Jul-26</span></div>
+    </div>
+    <div class="kpi-bi" style="border-top-color:#16a34a">
+      <div class="kpi-bi-icon">📉</div>
+      <div class="kpi-bi-label">Attrition</div>
+      <div class="kpi-bi-value" style="color:#16a34a">4.88%</div>
+      <div><span class="kpi-bi-delta d-up">↓ 3.07 vs Jul-26</span></div>
+    </div>
+  </div></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title"><span class="card-title-dot" style="background:#1d4ed8;"></span>HC by Department</div>
-            <canvas id="chartMonthTeam" height="175"></canvas>
+            <canvas id="chartMonthTeam" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
           <div class="card">
-            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">vs Previous Month</span></div>
-            <canvas id="chartMonthVsPrev" height="175"></canvas>
+            <div class="card-title"><span class="card-title-dot" style="background:#94a3b8;"></span><span id="chartMonthCmpTitle">Aug-26 vs Jul-26</span></div>
+            <canvas id="chartMonthVsPrev" height="175" style="box-sizing: border-box;" width="300"></canvas>
           </div>
         </div>
         <div class="section-heading">Department Register</div>
@@ -13556,7 +14937,138 @@ tr.total-row td { color: rgb(226, 232, 240); font-weight: 700; border-width: med
               <th>Type</th><th>Department</th>
               <th class="r">Opening HC</th><th class="r">Closing HC</th><th class="r">Delta</th>
             </tr></thead>
-            <tbody id="monthDetailRegisterBody"></tbody>
+            <tbody id="monthDetailRegisterBody"><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Technology</td>
+      <td class="r">41</td>
+      <td class="r" style="font-weight:700;">37</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">4 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">33</td>
+      <td class="r" style="font-weight:700;">31</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">2 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">25</td>
+      <td class="r" style="font-weight:700;">25</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">13</td>
+      <td class="r" style="font-weight:700;">13</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Product</td>
+      <td class="r">11</td>
+      <td class="r" style="font-weight:700;">11</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">10</td>
+      <td class="r" style="font-weight:700;">9</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Solution Design</td>
+      <td class="r">8</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Analytics</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">6</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Marketing</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Founders Office</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">HR &amp; Admin</td>
+      <td class="r">6</td>
+      <td class="r" style="font-weight:700;">5</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Learning and Development</td>
+      <td class="r">5</td>
+      <td class="r" style="font-weight:700;">4</td>
+      <td class="r chg-neg" style="font-size:1rem;letter-spacing:.5px;">1 ↓</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Communications</td>
+      <td class="r">3</td>
+      <td class="r" style="font-weight:700;">3</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Business</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">Labs</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-onroll">Onroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Customer Experience</td>
+      <td class="r">17</td>
+      <td class="r" style="font-weight:700;">17</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Supply</td>
+      <td class="r">7</td>
+      <td class="r" style="font-weight:700;">8</td>
+      <td class="r chg-pos" style="font-size:1rem;letter-spacing:.5px;">1 ↑</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">Execution Team</td>
+      <td class="r">2</td>
+      <td class="r" style="font-weight:700;">2</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-offroll">Offroll</span></td>
+      <td style="font-weight:600;">User Insights</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr>
+      <td><span class="badge b-intern">Intern</span></td>
+      <td style="font-weight:600;">Finance</td>
+      <td class="r">1</td>
+      <td class="r" style="font-weight:700;">1</td>
+      <td class="r chg-zero" style="font-size:1rem;letter-spacing:.5px;">— →</td>
+    </tr><tr class="total-row">
+    <td colspan="2">Grand Total</td>
+    <td class="r">205</td>
+    <td class="r">197</td>
+    <td class="r" style="color:#f87171;font-size:1rem;">8 ↓</td>
+  </tr></tbody>
           </table></div>
         </div>
       </div>
