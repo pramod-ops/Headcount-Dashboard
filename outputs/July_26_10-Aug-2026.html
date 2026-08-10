@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>July-26</title>
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>July-26</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>*, ::before, ::after { box-sizing: border-box; margin: 0px; padding: 0px; }
@@ -1667,4 +1667,29 @@ const _cfgs={"chartEmpType":{"type":"doughnut","data":{"labels":["On-roll","Off-
 Object.values(_cfgs).forEach(function(cfg){if(cfg._dlabels){var s=cfg._dlabels;if(cfg.options&&cfg.options.plugins&&cfg.options.plugins.datalabels)cfg.options.plugins.datalabels.formatter=function(v,ctx){return s[ctx.dataIndex]||'';};}});
 var _deptPatched=1;(function(){var dc=_cfgs.chartDeptProp;if(!dc)return;var ds=dc.data.datasets;if(!ds||ds.length<2)return;var d0=ds[0].data||[],d1=ds[1].data||[];var gt=d0.reduce(function(s,v){return s+v;},0)+d1.reduce(function(s,v){return s+v;},0);function sl(v){if(!v||v<=0)return null;var p=gt>0?(v/gt*100):0;return p>=2?v+' ('+p.toFixed(1)+'%)':null;}var ol=d0.map(sl),fl=d1.map(sl),tl=d0.map(function(v,i){var t=v+(d1[i]||0);if(!t)return null;var p=gt>0?(t/gt*100).toFixed(1):'0.0';return t+' ('+p+'%)';});if(dc.options&&dc.options.plugins)dc.options.plugins.datalabels={display:false};ds[0].datalabels={display:true,color:'#fff',anchor:'center',align:'center',font:{size:9,weight:'bold',family:'"Segoe UI",sans-serif'},clip:false,formatter:function(v,ctx){return ol[ctx.dataIndex]||null;}};ds[1].datalabels={labels:{segment:{display:true,color:'#fff',anchor:'center',align:'center',font:{size:9,weight:'bold',family:'"Segoe UI",sans-serif'},clip:false,formatter:function(v,ctx){return fl[ctx.dataIndex]||null;}},total:{display:true,color:'#e2e8f0',anchor:'end',align:'right',font:{size:10,weight:'bold',family:'"Segoe UI",sans-serif'},formatter:function(v,ctx){return tl[ctx.dataIndex]||null;}}}};})();
 Object.entries(_cfgs).forEach(([id,cfg])=>{const el=document.getElementById(id);if(el)new Chart(el,cfg);});
-</script></body></html>
+</script></html><script>
+window.addEventListener('load',function(){
+  function pd(cv){
+    var ch=Chart.getChart(cv);if(!ch)return;
+    var ds=ch.config.data&&ch.config.data.datasets;if(!ds||ds.length<2)return;
+    var d0=ds[0].data||[],d1=ds[1].data||[];
+    var gt=d0.reduce(function(s,v){return s+v;},0)+d1.reduce(function(s,v){return s+v;},0);if(!gt)return;
+    var sl=function(v){if(!v||v<=0)return null;var p=v/gt*100;return p>=2?v+' ('+p.toFixed(1)+'%)':null;};
+    var ol=d0.map(sl),fl=d1.map(sl);
+    ds.forEach(function(d){delete d.datalabels;});
+    ch.config.options.plugins.datalabels={
+      display:function(ctx){return !!(ctx.datasetIndex===0?ol[ctx.dataIndex]:fl[ctx.dataIndex]);},
+      formatter:function(v,ctx){return ctx.datasetIndex===0?(ol[ctx.dataIndex]||null):(fl[ctx.dataIndex]||null);},
+      color:'#fff',anchor:'center',align:'center',
+      font:{size:9,weight:'bold',family:'"Segoe UI",sans-serif'},clip:false
+    };
+    ch.update();
+  }
+  setTimeout(function(){
+    document.querySelectorAll('canvas').forEach(function(cv){
+      if(cv.id==='chartDeptProp'||cv.id.endsWith('_chartDeptProp'))pd(cv);
+    });
+  },600);
+});
+</script>
+</body>
